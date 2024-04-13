@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://b5nhsqt51tx61"]
+
+[ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
+[ext_resource type="Texture2D" uid="uid://c67xjeanp8jhv" path="res://icon.svg" id="1_ypcak"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_gugc5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bjtwd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.175, 0.175)
+texture = ExtResource("1_ypcak")
