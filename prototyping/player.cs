@@ -5,6 +5,8 @@ public partial class player : CharacterBody2D
 {
 	public AttributeModifierPack Speed = new AttributeModifierPack(100);
 	public const float JumpVelocity = -300.0f;
+	private int isHoldingDirection = 0;
+	private int horizontalMovement = 0;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
@@ -23,13 +25,32 @@ public partial class player : CharacterBody2D
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
+
+		// This piece of code is responsible for null-cancelling movement.
+		if (isHoldingDirection >= 0 && Input.IsActionPressed("ui_right"))
 		{
-			velocity.X = direction.X * Speed.getTotalValue();
+			isHoldingDirection = 1;
+			horizontalMovement = 1;
+			if (Input.IsActionPressed("ui_left"))
+			{
+				horizontalMovement *= -1;
+			}
 		}
-		else
+		else if (isHoldingDirection <= 0 && Input.IsActionPressed("ui_left"))
 		{
+			isHoldingDirection = -1;
+			horizontalMovement = -1;
+			if (Input.IsActionPressed("ui_right"))
+			{
+				horizontalMovement *= -1;
+			}
+		} else {
+			horizontalMovement = 0;
+			isHoldingDirection = 0;
+		}
+		if (horizontalMovement != 0) {
+			velocity.X = horizontalMovement * Speed.getTotalValue();
+		} else {
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed.getTotalValue());
 		}
 
