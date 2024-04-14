@@ -3,7 +3,7 @@ using System;
 
 public partial class player : CharacterBody2D
 {
-	public const float Speed = 100.0f;
+	public AttributeModifierPack Speed = new AttributeModifierPack(100);
 	public const float JumpVelocity = -300.0f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -26,11 +26,11 @@ public partial class player : CharacterBody2D
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 		if (direction != Vector2.Zero)
 		{
-			velocity.X = direction.X * Speed;
+			velocity.X = direction.X * Speed.getTotalValue();
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed.getTotalValue());
 		}
 
 		Velocity = velocity;
