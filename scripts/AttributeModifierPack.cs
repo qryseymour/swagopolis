@@ -48,7 +48,6 @@ public class AttributeModifierPack
             calculateFinalValue();
     } }
     private float att_finalvalue;
-    public float Att_finalvalue { get; set; }
 
     // Basic operators
     public AttributeModifierPack(float amount = 0, float percentage = 0, float multiplier = 1, float flatamount = 0) {
@@ -68,11 +67,11 @@ public class AttributeModifierPack
     }
 
     public void calculateFinalValue() {
-        Att_finalvalue = (Att_amount * (Att_percentage + 1) * Att_multiplier) + Att_flatamount;
+        att_finalvalue = (Att_amount * (Att_percentage + 1) * Att_multiplier) + Att_flatamount;
     }
 
     public float getFinalValue() {
-        return Att_finalvalue;
+        return att_finalvalue;
     }
 
     public static bool operator ==(AttributeModifierPack left, AttributeModifierPack right) {
