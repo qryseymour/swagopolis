@@ -4,7 +4,8 @@ using System;
 public partial class player : CharacterBody2D
 {
 	public AttributeModifierPack speed = new AttributeModifierPack(100);
-	public AttributeModifierPack acceleration = new AttributeModifierPack(50);
+	public AttributeModifierPack acceleration = new AttributeModifierPack(100);
+	public AttributeModifierPack friction = new AttributeModifierPack(100);
 	public AttributeModifierPack jumpVelocity = new AttributeModifierPack(-300);
 	private int isHoldingDirection = 0;
 	private int horizontalMovement = 0;
@@ -54,7 +55,8 @@ public partial class player : CharacterBody2D
 			velocity.X = Mathf.MoveToward(Velocity.X, horizontalMovement * speed.getFinalValue(), 
 			acceleration.getFinalValue() * Mathf.Pow((float)delta, Mathf.Clamp(1 - (acceleration.getFinalValue() / speed.getFinalValue()), 0, 1)));
 		} else {
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed.getFinalValue());
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, 
+			friction.getFinalValue() * Mathf.Pow((float)delta, Mathf.Clamp(1 - (friction.getFinalValue() / speed.getFinalValue()), 0, 1)));
 		}
 
 		Velocity = velocity;
