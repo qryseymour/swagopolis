@@ -16,31 +16,63 @@
 public class AttributeModifierPack
 {
     private float att_amount;
-    public float Att_amount { get; set; }
+    public float Att_amount { get {
+            return att_amount;
+    } 
+    set {
+            att_amount = value;
+            calculateFinalValue();
+    } }
     private float att_percentage;
-    public float Att_percentage { get; set; }
+    public float Att_percentage { get {
+            return att_percentage;
+    } 
+    set {
+            att_percentage = value;
+            calculateFinalValue();
+    } }
     private float att_multiplier;
-    public float Att_multiplier { get; set; }
+    public float Att_multiplier { get {
+            return att_multiplier;
+    } 
+    set {
+            att_multiplier = value;
+            calculateFinalValue();
+    } }
     private float att_flatamount;
-    public float Att_flatamount { get; set; }
+    public float Att_flatamount { get {
+            return att_flatamount;
+    } 
+    set {
+            att_flatamount = value;
+            calculateFinalValue();
+    } }
+    private float att_finalvalue;
+    public float Att_finalvalue { get; set; }
 
     // Basic operators
     public AttributeModifierPack(float amount = 0, float percentage = 0, float multiplier = 1, float flatamount = 0) {
-        Att_amount = amount;
-        Att_percentage = percentage;
-        Att_multiplier = multiplier;
-        Att_flatamount = flatamount;
+        att_amount = amount;
+        att_percentage = percentage;
+        att_multiplier = multiplier;
+        att_flatamount = flatamount;
+        calculateFinalValue();
     }
 
     public AttributeModifierPack(AttributeModifierPack att) {
-        Att_amount = att.Att_amount;
-        Att_percentage = att.Att_percentage;
-        Att_multiplier = att.Att_multiplier;
-        Att_flatamount = att.Att_flatamount;
+        att_amount = att.Att_amount;
+        att_percentage = att.Att_percentage;
+        att_multiplier = att.Att_multiplier;
+        att_flatamount = att.Att_flatamount;
+        calculateFinalValue();
     }
 
-    public float getTotalValue() {
-        return (Att_amount * (Att_percentage + 1) * Att_multiplier) + Att_flatamount;
+    public void calculateFinalValue() {
+        Att_finalvalue = (Att_amount * (Att_percentage + 1) * Att_multiplier) + Att_flatamount;
+    }
+
+    public float getFinalValue() {
+        return Att_finalvalue;
     }
 
     public static bool operator ==(AttributeModifierPack left, AttributeModifierPack right) {
@@ -66,6 +98,6 @@ public class AttributeModifierPack
     }
 
     public static explicit operator float(AttributeModifierPack att) {
-        return att.getTotalValue();
+        return att.getFinalValue();
     }
 }

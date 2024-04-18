@@ -48,10 +48,11 @@ public partial class player : CharacterBody2D
 			horizontalMovement = 0;
 			isHoldingDirection = 0;
 		}
+		
 		if (horizontalMovement != 0) {
-			velocity.X = horizontalMovement * Speed.getTotalValue();
+			velocity.X = horizontalMovement * Speed.getFinalValue();
 		} else {
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed.getTotalValue());
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed.getFinalValue());
 		}
 
 		Velocity = velocity;

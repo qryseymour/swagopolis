@@ -6,6 +6,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
 
 [node name="Player" type="CharacterBody2D"]
+floor_constant_speed = true
+floor_snap_length = 2.0
 script = ExtResource("1_gugc5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
