@@ -3,8 +3,9 @@ using System;
 
 public partial class player : CharacterBody2D
 {
-	public AttributeModifierPack Speed = new AttributeModifierPack(100);
-	public const float JumpVelocity = -300.0f;
+	public AttributeModifierPack speed = new AttributeModifierPack(100);
+	public AttributeModifierPack acceleration = new AttributeModifierPack(50);
+	public AttributeModifierPack jumpVelocity = new AttributeModifierPack(-300);
 	private int isHoldingDirection = 0;
 	private int horizontalMovement = 0;
 
@@ -21,7 +22,7 @@ public partial class player : CharacterBody2D
 
 		// Handle Jump.
 		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-			velocity.Y = JumpVelocity;
+			velocity.Y = jumpVelocity.getFinalValue();
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
@@ -50,9 +51,10 @@ public partial class player : CharacterBody2D
 		}
 		
 		if (horizontalMovement != 0) {
-			velocity.X = horizontalMovement * Speed.getFinalValue();
+			velocity.X = Mathf.MoveToward(Velocity.X, horizontalMovement * speed.getFinalValue(), 
+			acceleration.getFinalValue() * Mathf.Pow((float)delta, Mathf.Clamp(1 - (acceleration.getFinalValue() / speed.getFinalValue()), 0, 1)));
 		} else {
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed.getFinalValue());
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed.getFinalValue());
 		}
 
 		Velocity = velocity;
