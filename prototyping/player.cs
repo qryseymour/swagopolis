@@ -129,6 +129,14 @@ public partial class player : CharacterBody2D
 	}
 
 	public void bicycle() {
+		/*
+			Bicycling is a form of intentional movement designed
+			to prolong the player's stupid and sad little existance.
+			By moving constantly left and right whilst descending,
+			the player will have their descent slowed down by defined
+			margins. More of this mechanic will be improved further
+			done the line.
+		*/
 		if (isFacingRight && horizontalMovement < 0 || !isFacingRight && horizontalMovement > 0) {
 			isFacingRight = !isFacingRight;
 			if (velocity.Y > 0) {
