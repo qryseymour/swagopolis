@@ -11,5 +11,6 @@ public partial class world : Node2D
         collisionPolygon2D = GetNode<CollisionPolygon2D>("StaticBody2D/CollisionPolygon2D");
         polygon2D = GetNode<Polygon2D>("StaticBody2D/CollisionPolygon2D/Polygon2D");
         polygon2D.Polygon = collisionPolygon2D.Polygon;
+        RenderingServer.SetDefaultClearColor(new Color(0f,0f,0f));
     }
 }

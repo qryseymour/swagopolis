@@ -1,18 +1,67 @@
-[gd_scene load_steps=4 format=3 uid="uid://b5nhsqt51tx61"]
+[gd_scene load_steps=9 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
-[ext_resource type="Texture2D" uid="uid://c67xjeanp8jhv" path="res://icon.svg" id="1_ypcak"]
+[ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
+size = Vector2(6, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5c542"]
+atlas = ExtResource("2_r5n55")
+region = Rect2(1024, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x7t30"]
+atlas = ExtResource("2_r5n55")
+region = Rect2(0, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esk1o"]
+atlas = ExtResource("2_r5n55")
+region = Rect2(1024, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_23m7e"]
+atlas = ExtResource("2_r5n55")
+region = Rect2(2048, 0, 1024, 1024)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mk27o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5c542")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x7t30")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_esk1o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_23m7e")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_esk1o")
+}],
+"loop": true,
+"name": &"run",
+"speed": 1.5
+}]
 
 [node name="Player" type="CharacterBody2D"]
+position = Vector2(0, -10)
 floor_constant_speed = true
 floor_snap_length = 2.0
 script = ExtResource("1_gugc5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_bjtwd")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.175, 0.175)
-texture = ExtResource("1_ypcak")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.02, 0.02)
+sprite_frames = SubResource("SpriteFrames_mk27o")
+animation = &"run"
+frame_progress = 0.0015374

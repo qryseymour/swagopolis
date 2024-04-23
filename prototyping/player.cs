@@ -8,12 +8,20 @@ public partial class player : CharacterBody2D
 	public AttributeModifierPack friction = new AttributeModifierPack(100);
 	public AttributeModifierPack jumpVelocity = new AttributeModifierPack(-300);
 	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(2);
-	private int startedHoldingDirection = 0;
+	public AttributeModifierPack bicycleFactor = new AttributeModifierPack(5);
+	private AnimatedSprite2D animatedSprite2D = null;
+	private int startedHoldingRight = 0;
 	private int horizontalMovement = 0;
+	private bool isFacingRight = true;
 	private Vector2 velocity;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+
+	public override void _Ready()
+	{
+		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+	}
 
 	public override void _PhysicsProcess(double delta)
     {
@@ -31,6 +39,8 @@ public partial class player : CharacterBody2D
         {
             applyFriction(delta, speed.getFinalValue(), friction.getFinalValue());
         }
+		updateAnimations();
+		bicycle();
         Velocity = velocity;
         MoveAndSlide();
     }
@@ -41,20 +51,20 @@ public partial class player : CharacterBody2D
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
         // This piece of code is responsible for null-cancelling movement.
-        if (startedHoldingDirection >= 0 && Input.IsActionPressed("ui_right"))
+        if (startedHoldingRight >= 0 && Input.IsActionPressed("ui_right"))
         {
-            startedHoldingDirection = 1;
+            startedHoldingRight = 1;
             horizontalMovement = Input.IsActionPressed("ui_left") ? -1 : 1;
         }
-        else if (startedHoldingDirection <= 0 && Input.IsActionPressed("ui_left"))
+        else if (startedHoldingRight <= 0 && Input.IsActionPressed("ui_left"))
         {
-            startedHoldingDirection = -1;
+            startedHoldingRight = -1;
             horizontalMovement = Input.IsActionPressed("ui_right") ? 1 : -1;
         }
         else
         {
             horizontalMovement = 0;
-            startedHoldingDirection = 0;
+            startedHoldingRight = 0;
         }
     }
 
@@ -73,7 +83,7 @@ public partial class player : CharacterBody2D
 			}
 		}
 		else {
-			if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < jumpVelocity.getFinalValue() / cutJumpFactor.getFinalValue()) {
+			if (Input.IsActionJustPressed("ui_accept") && Velocity.Y < jumpVelocity.getFinalValue() / cutJumpFactor.getFinalValue()) {
 				applyJump(jumpVelocity.getFinalValue() / cutJumpFactor.getFinalValue());
 			}
 		}
@@ -107,5 +117,23 @@ public partial class player : CharacterBody2D
 		*/
 		velocity.X = Mathf.MoveToward(Velocity.X, 0, 
 		frictionPow * Mathf.Pow((float)delta, Mathf.Clamp(1 - (frictionPow / speedPow), 0, 1)));
+	}
+
+	public void updateAnimations() {
+		if (horizontalMovement != 0) {
+			animatedSprite2D.Play("run");
+			animatedSprite2D.FlipH = horizontalMovement < 0;
+		} else {
+			animatedSprite2D.Play("idle");
+		}
+	}
+
+	public void bicycle() {
+		if (isFacingRight && horizontalMovement < 0 || !isFacingRight && horizontalMovement > 0) {
+			isFacingRight = !isFacingRight;
+			if (velocity.Y > 0) {
+				velocity.Y /= bicycleFactor.getFinalValue();
+			}
+		}
 	}
 }
