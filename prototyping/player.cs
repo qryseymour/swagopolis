@@ -3,11 +3,23 @@ using System;
 
 public partial class player : CharacterBody2D
 {
-	public AttributeModifierPack speed = new AttributeModifierPack(100);
-	public AttributeModifierPack acceleration = new AttributeModifierPack(100);
-	public AttributeModifierPack friction = new AttributeModifierPack(100);
+	// Important Attributes
+	public AttributeModifierPack speed = new AttributeModifierPack(135);
+	public AttributeModifierPack acceleration = new AttributeModifierPack(131.25f);
+	public AttributeModifierPack friction = new AttributeModifierPack(87.5f);
 	public AttributeModifierPack jumpVelocity = new AttributeModifierPack(-300);
-	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(2);
+	public AttributeModifierPack availableJumps = new AttributeModifierPack(2);
+	// Get the gravity from the project settings to be synced with RigidBody nodes.
+	public AttributeModifierPack gravityVelocity = new AttributeModifierPack(ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle());
+	public short jumpCount = 0;
+
+
+
+	// Non-Important Attributes
+	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(0, 0, 0.5f);
+	public AttributeModifierPack cutJumpVelocity = null;
+	public AttributeModifierPack additionalGravityFactor = new AttributeModifierPack(0, 0, 2f);
+	public AttributeModifierPack additionalGravityVelocity = null;
 	public AttributeModifierPack bicycleFactor = new AttributeModifierPack(5);
 	private AnimatedSprite2D animatedSprite2D = null;
 	private int startedHoldingRight = 0;
@@ -15,12 +27,11 @@ public partial class player : CharacterBody2D
 	private bool isFacingRight = true;
 	private Vector2 velocity;
 
-	// Get the gravity from the project settings to be synced with RigidBody nodes.
-	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
-
 	public override void _Ready()
 	{
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		cutJumpVelocity = jumpVelocity + cutJumpFactor;
+		additionalGravityVelocity = gravityVelocity + additionalGravityFactor;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -31,7 +42,7 @@ public partial class player : CharacterBody2D
     private void controlCharacter(double delta)
     {
         velocity = Velocity;
-        applyGravity(delta, gravity);
+        handleGravity(delta);
         handleJump();
         handleDirection();
         applyAcceleration(delta, horizontalMovement, speed.getFinalValue(), acceleration.getFinalValue());
@@ -39,12 +50,23 @@ public partial class player : CharacterBody2D
         {
             applyFriction(delta, speed.getFinalValue(), friction.getFinalValue());
         }
-		updateAnimations();
-		bicycle();
+        updateAnimations();
+        bicycle();
         Velocity = velocity;
         MoveAndSlide();
     }
 
+    private void handleGravity(double delta)
+    {
+        if (Input.IsActionPressed("ui_down"))
+        {
+            applyGravity(delta, additionalGravityVelocity.getFinalValue());
+        }
+        else
+        {
+            applyGravity(delta, gravityVelocity.getFinalValue());
+        }
+    }
 
     private void handleDirection()
     {
@@ -78,13 +100,16 @@ public partial class player : CharacterBody2D
 	public void handleJump() {
 		// Handles Jumping, and the change in velocity when letting go of jump.
 		if (IsOnFloor()){
-			if (Input.IsActionJustPressed("ui_accept")) {
-				applyJump(jumpVelocity.getFinalValue());
-			}
+			jumpCount = (short)Math.Floor(availableJumps.getFinalValue());
 		}
-		else {
-			if (Input.IsActionJustPressed("ui_accept") && Velocity.Y < jumpVelocity.getFinalValue() / cutJumpFactor.getFinalValue()) {
-				applyJump(jumpVelocity.getFinalValue() / cutJumpFactor.getFinalValue());
+		if (Input.IsActionJustPressed("ui_accept") && jumpCount > 0) {
+			jumpCount--;
+			applyJump(jumpVelocity.getFinalValue());
+		}
+		if (!IsOnFloor()) {
+			// Good form to put more taxing calculations/checks after the &&'s.
+			if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < cutJumpVelocity.getFinalValue()) {
+				applyJump(cutJumpVelocity.getFinalValue());
 			}
 		}
 	}
@@ -135,7 +160,7 @@ public partial class player : CharacterBody2D
 			By moving constantly left and right whilst descending,
 			the player will have their descent slowed down by defined
 			margins. More of this mechanic will be improved further
-			done the line.
+			down the line.
 		*/
 		if (isFacingRight && horizontalMovement < 0 || !isFacingRight && horizontalMovement > 0) {
 			isFacingRight = !isFacingRight;
