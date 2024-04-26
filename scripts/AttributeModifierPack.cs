@@ -66,7 +66,7 @@ public class AttributeModifierPack
         calculateFinalValue();
     }
 
-    public void calculateFinalValue() {
+    private void calculateFinalValue() {
         att_finalvalue = (Att_amount * (Att_percentage + 1) * Att_multiplier) + Att_flatamount;
     }
 
@@ -86,7 +86,10 @@ public class AttributeModifierPack
     {
         return new AttributeModifierPack(left.Att_amount + right.Att_amount, left.Att_percentage + right.Att_percentage, left.Att_multiplier * right.Att_multiplier, left.Att_flatamount + right.Att_flatamount);
     }
-
+    public static AttributeModifierPack operator - (AttributeModifierPack left, AttributeModifierPack right)
+    {
+        return new AttributeModifierPack(left.Att_amount - right.Att_amount, left.Att_percentage - right.Att_percentage, left.Att_multiplier * -right.Att_multiplier, left.Att_flatamount - right.Att_flatamount);
+    }
     public static AttributeModifierPack operator * (AttributeModifierPack left, float right)
     {
         return new AttributeModifierPack(left.Att_amount * right, left.Att_percentage * right, left.Att_multiplier * right, left.Att_flatamount * right);
