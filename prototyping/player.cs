@@ -9,7 +9,7 @@ public partial class player : entity
 		base.acceleration = new AttributeModifierPack(131.25f);
 		base.friction = new AttributeModifierPack(87.5f);
 		base.jumpVelocity = new AttributeModifierPack(-300);
-		base.availableJumps = new AttributeModifierPack(2);
+		base.availableJumps = new AttributeModifierPack(2f);
 		base.canJumpMidair = true;
 	}
 

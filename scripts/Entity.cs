@@ -10,7 +10,7 @@ public partial class entity : CharacterBody2D {
 	public AttributeModifierPack availableJumps = new AttributeModifierPack(1);
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public AttributeModifierPack gravityVelocity = new AttributeModifierPack(ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle());
-	public short jumpCount = 0;
+	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
 
@@ -20,18 +20,34 @@ public partial class entity : CharacterBody2D {
 	public AttributeModifierPack cutJumpVelocity = null;
 	public AnimatedSprite2D animatedSprite2D = null;
 	public Timer coyoteJumpTimer = null;
+	public int horizontalMovement = 0;
+	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
-	protected int horizontalMovement = 0;
 	protected bool isFacingRight = true;
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
 	protected Vector2 velocity;
+	// Might go unused, but this action exists incase I want to modify what the coyoteJumpTimer timeout event does.
+	protected Action coyoteJumpTimerTimeoutEvent;
 
 	public override void _Ready()
 	{
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
 		cutJumpVelocity = jumpVelocity + cutJumpFactor;
+		/* 
+			When the coyote jump timer expires, if the entity is
+			unable to jump midair, is not jumping, and not on the
+			floor (doing the dinosaur) (doing ur mom), then the
+			entity loses one possible jump they can make.
+		*/
+		coyoteJumpTimer.Timeout += () =>
+		{
+			if (!canJumpMidair && !isJumping && !IsOnFloor())
+			{
+				jumpCount = jumpCount < 1 ? 0 : jumpCount - 1;
+			}
+		};
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -53,6 +69,7 @@ public partial class entity : CharacterBody2D {
             applyFriction(delta, speed.getFinalValue(), friction.getFinalValue());
         }
         updateAnimations();
+		handleCoyoteJump();
     }
 
     protected virtual void handleGravity(double delta)
@@ -91,12 +108,24 @@ public partial class entity : CharacterBody2D {
 
 	protected virtual void handleJump() {
 		// Handles Jumping, and the change in velocity when letting go of jump.
-		if (IsOnFloor()){
-			jumpCount = (short)Math.Floor(availableJumps.getFinalValue());
+		if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0){
+			jumpCount = availableJumps.getFinalValue();
+			isJumping = false;
 		}
 		if (Input.IsActionJustPressed("ui_accept") && jumpCount > 0) {
-			jumpCount--;
-			applyJump(jumpVelocity.getFinalValue());
+			isJumping = true;
+			/* 
+				If the player has less than 1 possible jump stored,
+				they only make a jump representing the fraction
+				of that number.
+			*/
+			if (jumpCount < 1) {
+				applyJump(jumpVelocity.getFinalValue() * jumpCount);
+				jumpCount = 0;
+			} else {
+				applyJump(jumpVelocity.getFinalValue());
+				jumpCount--;
+			}
 		}
 		if (!IsOnFloor()) {
 			// Good form to put more taxing calculations/checks after the &&'s.
@@ -146,10 +175,10 @@ public partial class entity : CharacterBody2D {
 	}
 
 	protected virtual void handleCoyoteJump() {
-		wasOnFloor = IsOnFloor();
-		justLeftLedge = wasOnFloor && !IsOnFloor();
+		justLeftLedge = wasOnFloor && !IsOnFloor() && velocity.Y >= 0;
 		if (justLeftLedge) {
 			coyoteJumpTimer.Start();
 		}
+		wasOnFloor = IsOnFloor();
 	}
 }

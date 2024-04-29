@@ -67,5 +67,5 @@ animation = &"run"
 frame_progress = 0.0015374
 
 [node name="CoyoteJumpTimer" type="Timer" parent="."]
-wait_time = 0.02
+wait_time = 0.25
 one_shot = true
