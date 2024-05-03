@@ -5,11 +5,6 @@ public partial class player : entity
 {
 	// Player variable shadowing
 	public player() {
-		base.speed = new AttributeModifierPack(135);
-		base.acceleration = new AttributeModifierPack(131.25f);
-		base.friction = new AttributeModifierPack(87.5f);
-		base.jumpVelocity = new AttributeModifierPack(-300);
-		base.availableJumps = new AttributeModifierPack(2f);
 		base.canJumpMidair = true;
 	}
 
@@ -23,7 +18,7 @@ public partial class player : entity
 	{
 		// Basic code to override ready with the base class implementation, followed by additional code.
 		base._Ready();
-		additionalGravityVelocity = gravityVelocity + additionalGravityFactor;
+		additionalGravityVelocity = entityMovementData.GravityVelocity + additionalGravityFactor;
 	}
 
     protected override void controlCharacter(double delta)
@@ -40,7 +35,7 @@ public partial class player : entity
         }
         else
         {
-            applyGravity(delta, gravityVelocity.getFinalValue());
+            applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
         }
     }
 
@@ -57,7 +52,6 @@ public partial class player : entity
 			isFacingRight = !isFacingRight;
 			if (velocity.Y > 0) {
 				velocity.Y /= bicycleFactor.getFinalValue();
-				GD.Print("Did a bycicle");
 			}
 		}
 	}

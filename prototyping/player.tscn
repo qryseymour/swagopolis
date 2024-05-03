@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://b5nhsqt51tx61"]
+[gd_scene load_steps=10 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
+[ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/PrototypePlayerMovementData.tres" id="2_x0ub3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
 size = Vector2(6, 16)
@@ -53,8 +54,9 @@ animations = [{
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(0, -10)
 floor_constant_speed = true
-floor_snap_length = 2.0
+floor_snap_length = 3.0
 script = ExtResource("1_gugc5")
+entityMovementData = ExtResource("2_x0ub3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)

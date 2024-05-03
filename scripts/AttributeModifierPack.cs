@@ -1,3 +1,5 @@
+using Godot;
+
 /*
     I would be type-safe and use attributeModType as a type definition 
     if anything in the future comes up that warrents it, but to due 
@@ -13,9 +15,11 @@
 /// Attributes perserve the modifiers used in the calculations to
 /// prevent any overrides.
 /// </summary> 
-public class AttributeModifierPack
+public partial class AttributeModifierPack : Resource
 {
+    [ExportGroup("Operations")]
     private float att_amount;
+    [Export]
     public float Att_amount { get {
             return att_amount;
     } 
@@ -24,6 +28,7 @@ public class AttributeModifierPack
             calculateFinalValue();
     } }
     private float att_percentage;
+    [Export]
     public float Att_percentage { get {
             return att_percentage;
     } 
@@ -31,7 +36,8 @@ public class AttributeModifierPack
             att_percentage = value;
             calculateFinalValue();
     } }
-    private float att_multiplier;
+    private float att_multiplier = 1;
+    [Export]
     public float Att_multiplier { get {
             return att_multiplier;
     } 
@@ -40,6 +46,7 @@ public class AttributeModifierPack
             calculateFinalValue();
     } }
     private float att_flatamount;
+    [Export]
     public float Att_flatamount { get {
             return att_flatamount;
     } 
@@ -47,9 +54,18 @@ public class AttributeModifierPack
             att_flatamount = value;
             calculateFinalValue();
     } }
+    // att_finalvalue should never be modifiable outside of it's
+    // respective calculations, so only getFinalValue() can get it.
     private float att_finalvalue;
 
     // Basic operators
+    public AttributeModifierPack() {
+        att_amount = 0;
+        att_percentage = 0;
+        att_multiplier = 1;
+        att_flatamount = 0;
+        calculateFinalValue();
+    }
     public AttributeModifierPack(float amount = 0, float percentage = 0, float multiplier = 1, float flatamount = 0) {
         att_amount = amount;
         att_percentage = percentage;

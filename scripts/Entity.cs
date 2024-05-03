@@ -2,14 +2,9 @@ using Godot;
 using System;
 
 public partial class entity : CharacterBody2D {
-    // Important Attributes
-	public AttributeModifierPack speed = new AttributeModifierPack(100);
-	public AttributeModifierPack acceleration = new AttributeModifierPack(100);
-	public AttributeModifierPack friction = new AttributeModifierPack(100);
-	public AttributeModifierPack jumpVelocity = new AttributeModifierPack(-300);
-	public AttributeModifierPack availableJumps = new AttributeModifierPack(1);
-	// Get the gravity from the project settings to be synced with RigidBody nodes.
-	public AttributeModifierPack gravityVelocity = new AttributeModifierPack(ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle());
+	// Important Attributes
+	[Export]
+	public EntityMovementData entityMovementData;
 	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
@@ -34,7 +29,7 @@ public partial class entity : CharacterBody2D {
 	{
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
-		cutJumpVelocity = jumpVelocity + cutJumpFactor;
+		cutJumpVelocity = entityMovementData.JumpVelocity + cutJumpFactor;
 		/* 
 			When the coyote jump timer expires, if the entity is
 			unable to jump midair, is not jumping, and not on the
@@ -63,10 +58,10 @@ public partial class entity : CharacterBody2D {
         handleGravity(delta);
         handleJump();
         handleDirection();
-        applyAcceleration(delta, horizontalMovement, speed.getFinalValue(), acceleration.getFinalValue());
+        applyAcceleration(delta, horizontalMovement, entityMovementData.Speed.getFinalValue(), entityMovementData.Acceleration.getFinalValue());
         if (horizontalMovement == 0)
         {
-            applyFriction(delta, speed.getFinalValue(), friction.getFinalValue());
+            applyFriction(delta, entityMovementData.Speed.getFinalValue(), entityMovementData.Friction.getFinalValue());
         }
         updateAnimations();
 		handleCoyoteJump();
@@ -74,7 +69,7 @@ public partial class entity : CharacterBody2D {
 
     protected virtual void handleGravity(double delta)
     {
-        applyGravity(delta, gravityVelocity.getFinalValue());
+        applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
     }
 
     protected virtual void handleDirection()
@@ -109,7 +104,7 @@ public partial class entity : CharacterBody2D {
 	protected virtual void handleJump() {
 		// Handles Jumping, and the change in velocity when letting go of jump.
 		if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0){
-			jumpCount = availableJumps.getFinalValue();
+			jumpCount = entityMovementData.AvailableJumps.getFinalValue();
 			isJumping = false;
 		}
 		if (Input.IsActionJustPressed("ui_accept") && jumpCount > 0) {
@@ -120,10 +115,10 @@ public partial class entity : CharacterBody2D {
 				of that number.
 			*/
 			if (jumpCount < 1) {
-				applyJump(jumpVelocity.getFinalValue() * jumpCount);
+				applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
 				jumpCount = 0;
 			} else {
-				applyJump(jumpVelocity.getFinalValue());
+				applyJump(entityMovementData.JumpVelocity.getFinalValue());
 				jumpCount--;
 			}
 		}
