@@ -14,6 +14,7 @@ public partial class player : entity
 	public float bicycleFactor = 5;
 	public float wallJumpFactor = 3;
 	public Timer coyoteJumpTimer = null;
+	protected bool isFacingRight = true;
 
 	public override void _Ready()
 	{
@@ -53,7 +54,7 @@ public partial class player : entity
             applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
         }
     }
-	public override void restoreJumps()
+	protected override void restoreJumps()
     {
         if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0)
         {
@@ -63,6 +64,13 @@ public partial class player : entity
     }
 
 	protected virtual void handleCoyoteJump() {
+		/*
+			This is the line of code that handles when a player
+			just left the ledge, then after it the supporting
+			variable to keep track of when the player was on
+			the floor. I don't know why I'm making dumb comments
+			like these.
+		*/
 		justLeftLedge = wasOnFloor && !IsOnFloor() && velocity.Y >= 0;
 		if (justLeftLedge) {
 			coyoteJumpTimer.Start();
@@ -70,40 +78,22 @@ public partial class player : entity
 		wasOnFloor = IsOnFloor();
 	}
 
-	protected override void handleJump()
+	protected override void controlJumps()
     {
-        // Handles Jumping, and the change in velocity when letting go of jump.
-        if (Input.IsActionJustPressed("ui_accept"))
-        {
-			if (!IsOnFloor() && IsOnWall()) {
-				GD.Print("Walljump! : " + GetWallNormal().X);
-				velocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
-				jumpCount++;
-			}
-            /* 
-				If the player has less than 1 possible jump stored,
-				they only make a jump representing the fraction
-				of that number.
-			*/
-            if (jumpCount >= 1)
-            {
-                applyJump(entityMovementData.JumpVelocity.getFinalValue());
-                jumpCount--;
-            }
-            else if (jumpCount > 0)
-            {
-                applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
-                jumpCount = 0;
-            }
-        }
-        if (!IsOnFloor())
-        {
-            // Good form to put more taxing calculations/checks after the &&'s.
-            if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < cutJumpVelocity.getFinalValue())
-            {
-                applyJump(cutJumpVelocity.getFinalValue());
-            }
-        }
+		/*
+			This is the implementation for wall-jumps; When
+			a wall-jump is made, its by checking the conditions,
+			applying the horizontal force, then simply incrementing
+			the jump count, before it then processes a regular
+			jump. This... may be clever?
+		*/
+		if (!IsOnFloor() && IsOnWall())
+		{
+			GD.Print("Walljump! : " + GetWallNormal().X);
+			velocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
+			jumpCount++;
+		}
+		base.controlJumps();
     }
 
 	protected void bicycle() {

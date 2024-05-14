@@ -17,7 +17,6 @@ public partial class entity : CharacterBody2D {
 	public int horizontalMovement = 0;
 	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
-	protected bool isFacingRight = true;
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
 	protected Vector2 velocity;
@@ -47,6 +46,13 @@ public partial class entity : CharacterBody2D {
         {
             applyFriction(delta, entityMovementData.Speed.getFinalValue(), entityMovementData.Friction.getFinalValue());
         }
+		/*
+			This line acts as a divider between all internal
+			factions that modify just X (as above), and can
+			modify X AND Y (as below). This avoids any conflicts
+			with having set velocities overriding one another.
+			Although better coding practices can resolve this.
+		*/
         restoreJumps();
         handleJump();
         updateAnimations();
@@ -89,23 +95,9 @@ public partial class entity : CharacterBody2D {
 	protected virtual void handleJump()
     {
         // Handles Jumping, and the change in velocity when letting go of jump.
-        if (Input.IsActionJustPressed("ui_accept") && jumpCount > 0)
+        if (Input.IsActionJustPressed("ui_accept"))
         {
-            /* 
-				If the player has less than 1 possible jump stored,
-				they only make a jump representing the fraction
-				of that number.
-			*/
-            if (jumpCount < 1)
-            {
-                applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
-                jumpCount = 0;
-            }
-            else
-            {
-                applyJump(entityMovementData.JumpVelocity.getFinalValue());
-                jumpCount--;
-            }
+            controlJumps();
         }
         if (!IsOnFloor())
         {
@@ -117,7 +109,26 @@ public partial class entity : CharacterBody2D {
         }
     }
 
-    public virtual void restoreJumps()
+    protected virtual void controlJumps()
+    {
+        /* 
+            If the player has less than 1 possible jump stored,
+            they only make a jump representing the fraction
+            of that number.
+        */
+        if (jumpCount >= 1)
+        {
+            applyJump(entityMovementData.JumpVelocity.getFinalValue());
+            jumpCount--;
+        }
+        else if (jumpCount > 0)
+        {
+            applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
+            jumpCount = 0;
+        }
+    }
+
+    protected virtual void restoreJumps()
     {
         if (IsOnFloor())
         {
