@@ -10,15 +10,13 @@ public partial class player : entity
 
 
 	// Non-Important Attributes
-	public AttributeModifierPack additionalGravityFactor = new AttributeModifierPack(0, 0, 2f);
-	public AttributeModifierPack additionalGravityVelocity = null;
-	public AttributeModifierPack bicycleFactor = new AttributeModifierPack(5);
+	public float additionalGravityFactor = 2;
+	public float bicycleFactor = 5;
 
 	public override void _Ready()
 	{
 		// Basic code to override ready with the base class implementation, followed by additional code.
 		base._Ready();
-		additionalGravityVelocity = entityMovementData.GravityVelocity + additionalGravityFactor;
 	}
 
     protected override void controlCharacter(double delta)
@@ -31,7 +29,7 @@ public partial class player : entity
     {
         if (Input.IsActionPressed("ui_down"))
         {
-            applyGravity(delta, additionalGravityVelocity.getFinalValue());
+            applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue() * additionalGravityFactor);
         }
         else
         {
@@ -51,7 +49,7 @@ public partial class player : entity
 		if (isFacingRight && horizontalMovement < 0 || !isFacingRight && horizontalMovement > 0) {
 			isFacingRight = !isFacingRight;
 			if (velocity.Y > 0) {
-				velocity.Y /= bicycleFactor.getFinalValue();
+				velocity.Y /= bicycleFactor;
 			}
 		}
 	}

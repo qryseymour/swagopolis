@@ -2,46 +2,20 @@
     "version": "2.0.0",
     "configurations": [
         {
-            "name": "Play in Editor",
-            "type": "godot-mono",
-            "mode": "playInEditor",
-            "request": "launch"
-        },
-        {
-            "name": "Launch",
-            "type": "godot-mono",
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
             "request": "launch",
-            "mode": "executable",
             "preLaunchTask": "build",
-            "executable": "<insert-godot-executable-path-here>",
-            // See which arguments are available here:
-            // https://docs.godotengine.org/en/stable/getting_started/editor/command_line_tutorial.html
-            "executableArguments": [
-                "--path",
-                "${workspaceRoot}"
-            ]
+            "program": "C:/Users/Qryseymour/Documents/Godot/Godot.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole",
         },
         {
-            "name": "Launch (Select Scene)",
-            "type": "godot-mono",
-            "request": "launch",
-            "mode": "executable",
-            "preLaunchTask": "build",
-            "executable": "<insert-godot-executable-path-here>",
-            // See which arguments are available here:
-            // https://docs.godotengine.org/en/stable/getting_started/editor/command_line_tutorial.html
-            "executableArguments": [
-                "--path",
-                "${workspaceRoot}",
-                "${command:SelectLaunchScene}"
-            ]
-        },
-        {
-            "name": "Attach",
-            "type": "godot-mono",
+            "name": ".NET Core Attach",
+            "type": "coreclr",
             "request": "attach",
-            "address": "localhost",
-            "port": 23685
         }
     ]
 }

@@ -3,15 +3,17 @@
     "tasks": [
         {
             "label": "build",
-            "command": "<insert-godot-executable-path-here>",
-            "type": "process",
+            "command": "dotnet",
+            "type": "shell",
             "args": [
-                "--build-solutions",
-                "--path",
-                "${workspaceRoot}",
-                "--no-window",
-                "-q"
+                "build",
+                "/property:GenerateFullpaths=true",
+                "/consoleloggerparameters:NoSummary"
             ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
             "problemMatcher": "$msCompile"
         }
     ]
