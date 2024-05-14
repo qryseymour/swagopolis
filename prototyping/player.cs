@@ -19,9 +19,9 @@ public partial class player : entity
 		base._Ready();
 	}
 
-    protected override void controlCharacter(double delta)
+    protected override void controlCharacterPhysics(double delta)
     {
-		base.controlCharacter(delta);
+		base.controlCharacterPhysics(delta);
         bicycle();
     }
 

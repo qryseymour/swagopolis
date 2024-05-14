@@ -48,12 +48,12 @@ public partial class entity : CharacterBody2D {
 	public override void _PhysicsProcess(double delta)
     {
         velocity = Velocity;
-        controlCharacter(delta);
+        controlCharacterPhysics(delta);
         Velocity = velocity;
         MoveAndSlide();
     }
 
-    protected virtual void controlCharacter(double delta)
+    protected virtual void controlCharacterPhysics(double delta)
     {
         handleGravity(delta);
         handleJump();
@@ -143,7 +143,7 @@ public partial class entity : CharacterBody2D {
 				have any noticable start up, and vice-versa.				
 			*/  
 			velocity.X = Mathf.MoveToward(Velocity.X, movementDirection * speedPow, 
-			accelerationPow * Mathf.Pow((float)delta, Mathf.Clamp(1 - (accelerationPow / speedPow), 0, 1)));
+			accelerationPow * Mathf.Pow((float)delta, 1 - (accelerationPow / speedPow)));
 		} 
 	}
 
@@ -157,7 +157,7 @@ public partial class entity : CharacterBody2D {
 			needs to know that to know where it needs to go.
 		*/
 		velocity.X = Mathf.MoveToward(Velocity.X, 0, 
-		frictionPow * Mathf.Pow((float)delta, Mathf.Clamp(1 - (frictionPow / speedPow), 0, 1)));
+		frictionPow * Mathf.Pow((float)delta, 1 - (frictionPow / speedPow)));
 	}
 
 	protected virtual void updateAnimations() {
