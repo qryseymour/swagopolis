@@ -5,23 +5,40 @@ public partial class player : entity
 {
 	// Player variable shadowing
 	public player() {
-		base.canJumpMidair = true;
+		canJumpMidair = true;
 	}
 
 
 	// Non-Important Attributes
 	public float additionalGravityFactor = 2;
 	public float bicycleFactor = 5;
+	public float wallJumpFactor = 3;
+	public Timer coyoteJumpTimer = null;
 
 	public override void _Ready()
 	{
 		// Basic code to override ready with the base class implementation, followed by additional code.
 		base._Ready();
+		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
+		/* 
+			When the coyote jump timer expires, if the entity is
+			unable to jump midair, is not jumping, and not on the
+			floor (doing the dinosaur) (doing ur mom), then the
+			entity loses one possible jump they can make.
+		*/
+		coyoteJumpTimer.Timeout += () =>
+		{
+			if (!canJumpMidair && !isJumping && !IsOnFloor())
+			{
+				jumpCount = jumpCount < 1 ? 0 : jumpCount - 1;
+			}
+		};
 	}
 
     protected override void controlCharacterPhysics(double delta)
     {
 		base.controlCharacterPhysics(delta);
+		handleCoyoteJump();
         bicycle();
     }
 
@@ -34,6 +51,58 @@ public partial class player : entity
         else
         {
             applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
+        }
+    }
+	public override void restoreJumps()
+    {
+        if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0)
+        {
+            jumpCount = entityMovementData.AvailableJumps.getFinalValue();
+            isJumping = false;
+        }
+    }
+
+	protected virtual void handleCoyoteJump() {
+		justLeftLedge = wasOnFloor && !IsOnFloor() && velocity.Y >= 0;
+		if (justLeftLedge) {
+			coyoteJumpTimer.Start();
+		}
+		wasOnFloor = IsOnFloor();
+	}
+
+	protected override void handleJump()
+    {
+        // Handles Jumping, and the change in velocity when letting go of jump.
+        if (Input.IsActionJustPressed("ui_accept"))
+        {
+			if (!IsOnFloor() && IsOnWall()) {
+				GD.Print("Walljump! : " + GetWallNormal().X);
+				velocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
+				jumpCount++;
+			}
+            /* 
+				If the player has less than 1 possible jump stored,
+				they only make a jump representing the fraction
+				of that number.
+			*/
+            if (jumpCount >= 1)
+            {
+                applyJump(entityMovementData.JumpVelocity.getFinalValue());
+                jumpCount--;
+            }
+            else if (jumpCount > 0)
+            {
+                applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
+                jumpCount = 0;
+            }
+        }
+        if (!IsOnFloor())
+        {
+            // Good form to put more taxing calculations/checks after the &&'s.
+            if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < cutJumpVelocity.getFinalValue())
+            {
+                applyJump(cutJumpVelocity.getFinalValue());
+            }
         }
     }
 

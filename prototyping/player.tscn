@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
+[ext_resource type="Resource" uid="uid://86j55lbf07gd" path="res://chars/DefaultEntityMovementData.tres" id="2_2b7kr"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
-[ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/PrototypePlayerMovementData.tres" id="2_x0ub3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
 size = Vector2(6, 16)
@@ -56,7 +56,7 @@ position = Vector2(0, -10)
 floor_constant_speed = true
 floor_snap_length = 3.0
 script = ExtResource("1_gugc5")
-entityMovementData = ExtResource("2_x0ub3")
+entityMovementData = ExtResource("2_2b7kr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
@@ -69,5 +69,5 @@ animation = &"run"
 frame_progress = 0.0015374
 
 [node name="CoyoteJumpTimer" type="Timer" parent="."]
-wait_time = 0.25
+wait_time = 0.1
 one_shot = true

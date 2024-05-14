@@ -8,9 +8,18 @@
 [node name="StaticBody2D" parent="." instance=ExtResource("1_b83db")]
 
 [node name="CollisionPolygon2D" parent="StaticBody2D" index="0"]
-polygon = PackedVector2Array(0, 0, 16, 0, 16, 104, 48, 104, 80, 120, 104, 120, 120, 120, 136, 104, 136, 144, 160, 144, 160, 112, 192, 112, 192, 120, 216, 120, 248, 104, 272, 104, 272, 168, 296, 168, 296, 0, 320, 0, 320, 184, 0, 184)
+polygon = PackedVector2Array(0, 0, 16, 0, 16, 104, 48, 104, 80, 120, 104, 120, 120, 104, 136, 104, 136, 144, 160, 144, 160, 112, 192, 112, 192, 120, 216, 120, 248, 104, 272, 104, 272, 128, 296, 128, 296, 0, 320, 0, 320, 184, 0, 184)
 
 [node name="Player" parent="." instance=ExtResource("2_5nqux")]
 position = Vector2(40, 88)
 
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="StaticBody2D2" parent="." instance=ExtResource("1_b83db")]
+
+[node name="CollisionPolygon2D" parent="StaticBody2D2" index="0"]
+position = Vector2(-64, -112)
+polygon = PackedVector2Array(296, 184, 296, 112, 320, 112, 320, 184)
+
 [editable path="StaticBody2D"]
+[editable path="StaticBody2D2"]

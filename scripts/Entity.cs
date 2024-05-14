@@ -14,7 +14,6 @@ public partial class entity : CharacterBody2D {
 	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(0, 0, 0.5f);
 	public AttributeModifierPack cutJumpVelocity = null;
 	public AnimatedSprite2D animatedSprite2D = null;
-	public Timer coyoteJumpTimer = null;
 	public int horizontalMovement = 0;
 	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
@@ -28,21 +27,7 @@ public partial class entity : CharacterBody2D {
 	public override void _Ready()
 	{
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
 		cutJumpVelocity = entityMovementData.JumpVelocity + cutJumpFactor;
-		/* 
-			When the coyote jump timer expires, if the entity is
-			unable to jump midair, is not jumping, and not on the
-			floor (doing the dinosaur) (doing ur mom), then the
-			entity loses one possible jump they can make.
-		*/
-		coyoteJumpTimer.Timeout += () =>
-		{
-			if (!canJumpMidair && !isJumping && !IsOnFloor())
-			{
-				jumpCount = jumpCount < 1 ? 0 : jumpCount - 1;
-			}
-		};
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -56,15 +41,15 @@ public partial class entity : CharacterBody2D {
     protected virtual void controlCharacterPhysics(double delta)
     {
         handleGravity(delta);
-        handleJump();
         handleDirection();
         applyAcceleration(delta, horizontalMovement, entityMovementData.Speed.getFinalValue(), entityMovementData.Acceleration.getFinalValue());
         if (horizontalMovement == 0)
         {
             applyFriction(delta, entityMovementData.Speed.getFinalValue(), entityMovementData.Friction.getFinalValue());
         }
+        restoreJumps();
+        handleJump();
         updateAnimations();
-		handleCoyoteJump();
     }
 
     protected virtual void handleGravity(double delta)
@@ -101,37 +86,49 @@ public partial class entity : CharacterBody2D {
 		}
 	}
 
-	protected virtual void handleJump() {
-		// Handles Jumping, and the change in velocity when letting go of jump.
-		if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0){
-			jumpCount = entityMovementData.AvailableJumps.getFinalValue();
-			isJumping = false;
-		}
-		if (Input.IsActionJustPressed("ui_accept") && jumpCount > 0) {
-			isJumping = true;
-			/* 
+	protected virtual void handleJump()
+    {
+        // Handles Jumping, and the change in velocity when letting go of jump.
+        if (Input.IsActionJustPressed("ui_accept") && jumpCount > 0)
+        {
+            /* 
 				If the player has less than 1 possible jump stored,
 				they only make a jump representing the fraction
 				of that number.
 			*/
-			if (jumpCount < 1) {
-				applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
-				jumpCount = 0;
-			} else {
-				applyJump(entityMovementData.JumpVelocity.getFinalValue());
-				jumpCount--;
-			}
-		}
-		if (!IsOnFloor()) {
-			// Good form to put more taxing calculations/checks after the &&'s.
-			if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < cutJumpVelocity.getFinalValue()) {
-				applyJump(cutJumpVelocity.getFinalValue());
-			}
-		}
-	}
+            if (jumpCount < 1)
+            {
+                applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
+                jumpCount = 0;
+            }
+            else
+            {
+                applyJump(entityMovementData.JumpVelocity.getFinalValue());
+                jumpCount--;
+            }
+        }
+        if (!IsOnFloor())
+        {
+            // Good form to put more taxing calculations/checks after the &&'s.
+            if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < cutJumpVelocity.getFinalValue())
+            {
+                applyJump(cutJumpVelocity.getFinalValue());
+            }
+        }
+    }
 
-	public virtual void applyJump(float jumpPow = -300) {
+    public virtual void restoreJumps()
+    {
+        if (IsOnFloor())
+        {
+            jumpCount = entityMovementData.AvailableJumps.getFinalValue();
+            isJumping = false;
+        }
+    }
+
+    public virtual void applyJump(float jumpPow = -300) {
 		velocity.Y = jumpPow;
+        isJumping = true;
 	}
 
 	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
@@ -167,13 +164,5 @@ public partial class entity : CharacterBody2D {
 		} else {
 			animatedSprite2D.Play("idle");
 		}
-	}
-
-	protected virtual void handleCoyoteJump() {
-		justLeftLedge = wasOnFloor && !IsOnFloor() && velocity.Y >= 0;
-		if (justLeftLedge) {
-			coyoteJumpTimer.Start();
-		}
-		wasOnFloor = IsOnFloor();
 	}
 }

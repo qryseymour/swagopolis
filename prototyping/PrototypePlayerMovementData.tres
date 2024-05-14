@@ -5,7 +5,7 @@
 
 [sub_resource type="Resource" id="Resource_gatji"]
 script = ExtResource("1_y783a")
-Att_amount = 87.5
+Att_amount = 135.0
 Att_percentage = 0.0
 Att_multiplier = 1.0
 Att_flatamount = 0.0
@@ -19,9 +19,9 @@ Att_flatamount = 0.0
 
 [sub_resource type="Resource" id="Resource_p2bdt"]
 script = ExtResource("1_y783a")
-Att_amount = 87.5
+Att_amount = 135.0
 Att_percentage = 0.0
-Att_multiplier = 0.65
+Att_multiplier = 1.0
 Att_flatamount = 0.0
 
 [sub_resource type="Resource" id="Resource_5xgq7"]
