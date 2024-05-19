@@ -143,29 +143,15 @@ public partial class entity : CharacterBody2D {
 	}
 
 	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
-		if (movementDirection != 0) {
-			/*
-				Distance from acceleration to speed corelates with 
-				the effectiveness of delta. This is intended to allow 
-				smaller acceleration numbers closer to speed to not
-				have any noticable start up, and vice-versa.				
-			*/  
+		if (movementDirection != 0) { 
 			velocity.X = Mathf.MoveToward(Velocity.X, movementDirection * speedPow, 
-			accelerationPow * Mathf.Pow((float)delta, 1 - (accelerationPow / speedPow)));
+			accelerationPow * 120 * (float)delta);
 		} 
 	}
 
 	public virtual void applyFriction(double delta, float speedPow = 100, float frictionPow = 100) {
-		/*
-			The same logic as mentioned with acceleration is
-			applied here. Friction closer to speed is almost
-			negligant, and friction away from speed is closer
-			to slipperyness. However, no check is made if
-			the horizontal direction is valid, as only acceleration
-			needs to know that to know where it needs to go.
-		*/
 		velocity.X = Mathf.MoveToward(Velocity.X, 0, 
-		frictionPow * Mathf.Pow((float)delta, 1 - (frictionPow / speedPow)));
+		frictionPow * 120 * (float)delta);
 	}
 
 	protected virtual void updateAnimations() {

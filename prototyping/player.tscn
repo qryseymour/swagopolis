@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
-[ext_resource type="Resource" uid="uid://86j55lbf07gd" path="res://chars/DefaultEntityMovementData.tres" id="2_2b7kr"]
+[ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/PrototypePlayerMovementData.tres" id="2_g250b"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
@@ -56,7 +56,7 @@ position = Vector2(0, -10)
 floor_constant_speed = true
 floor_snap_length = 3.0
 script = ExtResource("1_gugc5")
-entityMovementData = ExtResource("2_2b7kr")
+entityMovementData = ExtResource("2_g250b")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
