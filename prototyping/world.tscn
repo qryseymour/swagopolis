@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://doo64xa48bgvq"]
+[gd_scene load_steps=5 format=3 uid="uid://doo64xa48bgvq"]
 
 [ext_resource type="PackedScene" uid="uid://c1nwktxes2n5r" path="res://prototyping/PrototypePlatforms.tscn" id="1_b83db"]
+[ext_resource type="Script" path="res://prototyping/world.cs" id="1_df1lf"]
 [ext_resource type="PackedScene" uid="uid://b5nhsqt51tx61" path="res://prototyping/player.tscn" id="2_5nqux"]
+[ext_resource type="PackedScene" uid="uid://daecnm1ydt3it" path="res://prototyping/KennedyPrototypeTiles.tscn" id="3_edy6w"]
 
 [node name="World" type="Node2D"]
+script = ExtResource("1_df1lf")
 
 [node name="StaticBody2D" parent="." instance=ExtResource("1_b83db")]
 
@@ -20,6 +23,9 @@ position = Vector2(40, 88)
 [node name="CollisionPolygon2D" parent="StaticBody2D2" index="0"]
 position = Vector2(-64, -112)
 polygon = PackedVector2Array(296, 184, 296, 112, 320, 112, 320, 184)
+
+[node name="KennedyPrototypeTiles" parent="." instance=ExtResource("3_edy6w")]
+layer_0/tile_data = PackedInt32Array(851974, 262144, 1, 851975, 327680, 0, 851976, 327680, 1, 851977, 393216, 2, 851978, 327680, 0, 851979, 393216, 2, 851980, 327680, 1, 851981, 393216, 2, 851982, 393216, 1, 917517, 262144, 3, 983053, 327680, 4, 917515, 262144, 3, 983051, 393216, 4, 917513, 393216, 3, 983049, 327680, 4, 786443, 720896, 4, 720907, 720896, 5, 655371, 720896, 4, 589835, 786432, 4, 589836, 851968, 6, 589837, 851968, 6, 589838, 851968, 6, 589839, 851968, 4, 655375, 786432, 5, 655376, 851968, 4, 720912, 786432, 5, 720913, 851968, 6, 720914, 851968, 5, 655378, 786432, 4, 655379, 851968, 5, 589843, 720896, 5, 524307, 720896, 4, 458771, 851968, 4, 458770, 786432, 5, 393234, 720896, 4, 327698, 720896, 3, 1114129, 524289, 3, 1114130, 524289, 3, 1114131, 524289, 3, 983074, 524289, 3, 983075, 524289, 3, 983076, 524289, 3)
 
 [editable path="StaticBody2D"]
 [editable path="StaticBody2D2"]

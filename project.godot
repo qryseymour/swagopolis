@@ -27,6 +27,13 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="Swagopolis"
 
+[layer_names]
+
+2d_physics/layer_1="Important Objects"
+2d_physics/layer_2="Players"
+2d_physics/layer_3="Geometry"
+2d_physics/layer_4="InteractiveGeometry"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

@@ -20,8 +20,6 @@ public partial class entity : CharacterBody2D {
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
 	protected Vector2 velocity;
-	// Might go unused, but this action exists incase I want to modify what the coyoteJumpTimer timeout event does.
-	protected Action coyoteJumpTimerTimeoutEvent;
 
 	public override void _Ready()
 	{
@@ -40,7 +38,7 @@ public partial class entity : CharacterBody2D {
     protected virtual void controlCharacterPhysics(double delta)
     {
         handleGravity(delta);
-        handleDirection();
+        handleHorizontalDirection();
         applyAcceleration(delta, horizontalMovement, entityMovementData.Speed.getFinalValue(), entityMovementData.Acceleration.getFinalValue());
         if (horizontalMovement == 0)
         {
@@ -63,7 +61,7 @@ public partial class entity : CharacterBody2D {
         applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
     }
 
-    protected virtual void handleDirection()
+    protected virtual void handleHorizontalDirection()
     {
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.

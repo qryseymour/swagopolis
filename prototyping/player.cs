@@ -15,6 +15,8 @@ public partial class player : entity
 	public float wallJumpFactor = 3;
 	public Timer coyoteJumpTimer = null;
 	protected bool isFacingRight = true;
+	// Might go unused, but this action exists incase I want to modify what the coyoteJumpTimer timeout event does.
+	protected Action coyoteJumpTimerTimeoutEvent;
 
 	public override void _Ready()
 	{
@@ -111,4 +113,9 @@ public partial class player : entity
 			}
 		}
 	}
+
+    public void _OnInteractableGeometry2DBodyEntered(Node2D body) {
+        // Credits to https://www.youtube.com/watch?v=60wBbj1ar8Y for understanding the implementation of the Area2D
+        GD.Print("Player Test");
+    }
 }

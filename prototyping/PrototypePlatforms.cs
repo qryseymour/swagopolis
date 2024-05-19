@@ -11,6 +11,5 @@ public partial class PrototypePlatforms : StaticBody2D
         collisionPolygon2D = GetNode<CollisionPolygon2D>("CollisionPolygon2D");
         polygon2D = GetNode<Polygon2D>("CollisionPolygon2D/Polygon2D");
         polygon2D.Polygon = collisionPolygon2D.Polygon;
-        RenderingServer.SetDefaultClearColor(Colors.Cyan);
     }
 }
