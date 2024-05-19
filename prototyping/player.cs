@@ -89,7 +89,6 @@ public partial class player : entity
 		*/
 		if (!IsOnFloor() && IsOnWall())
 		{
-			GD.Print("Walljump! : " + GetWallNormal().X);
 			velocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
 			jumpCount++;
 		}

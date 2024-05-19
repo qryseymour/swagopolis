@@ -145,13 +145,13 @@ public partial class entity : CharacterBody2D {
 	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
 		if (movementDirection != 0) { 
 			velocity.X = Mathf.MoveToward(Velocity.X, movementDirection * speedPow, 
-			accelerationPow * 120 * (float)delta);
+			accelerationPow * 60 * (float)delta);
 		} 
 	}
 
 	public virtual void applyFriction(double delta, float speedPow = 100, float frictionPow = 100) {
 		velocity.X = Mathf.MoveToward(Velocity.X, 0, 
-		frictionPow * 120 * (float)delta);
+		frictionPow * 60 * (float)delta);
 	}
 
 	protected virtual void updateAnimations() {
