@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://b5nhsqt51tx61"]
+[gd_scene load_steps=11 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
 [ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/prototypePlayerMovementData.tres" id="2_g250b"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
-[ext_resource type="Script" path="res://scripts/statusEffectTag.cs" id="4_by760"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
 size = Vector2(6, 16)
@@ -85,8 +84,5 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_slhj0")
-
-[node name="Node" type="Node" parent="."]
-script = ExtResource("4_by760")
 
 [connection signal="body_entered" from="Area2D" to="." method="_OnInteractableGeometry2DBodyEntered"]
