@@ -5,9 +5,6 @@ public partial class characterEntity : CharacterBody2D {
 	// Important Attributes
 	[Export]
 	public entityMovementData entityMovementData;
-
-    [Signal]
-    public delegate void InteractableGeometryEventHandler();
 	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
@@ -15,7 +12,8 @@ public partial class characterEntity : CharacterBody2D {
 
 	// Non-Important Attributes
 	public attributeModifierPack cutJumpFactor = new attributeModifierPack(0, 0, 0.5f);
-	public attributeModifierPack cutJumpVelocity = null;	public int horizontalMovement = 0;
+	public attributeModifierPack cutJumpVelocity = null;
+    public int horizontalMovement = 0;
 	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
 	protected bool wasOnFloor = false;
@@ -28,7 +26,6 @@ public partial class characterEntity : CharacterBody2D {
         // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         // Signal Event Connections
-        InteractableGeometry += interactableGeometryEvent;
         // Other stuff
 		cutJumpVelocity = entityMovementData.JumpVelocity + cutJumpFactor;
 	}
@@ -170,13 +167,4 @@ public partial class characterEntity : CharacterBody2D {
 			animatedSprite2D.Play("idle");
 		}
 	}
-
-    public void _OnInteractableGeometry2DBodyEntered(Node2D body) {
-        // Credits to https://www.youtube.com/watch?v=60wBbj1ar8Y for understanding the implementation of the Area2D
-        EmitSignal(SignalName.InteractableGeometry);
-    }
-
-    protected virtual void interactableGeometryEvent() {
-        GD.Print("InteractableGeometryEvent");
-    }
 }

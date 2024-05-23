@@ -112,8 +112,4 @@ public partial class player : characterEntity
 			}
 		}
 	}
-
-	protected override void interactableGeometryEvent() {
-		GD.Print("InteractableGeometryEvent Player");
-	}
 }

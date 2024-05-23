@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c81hi0k1bktlx"]
+
+[ext_resource type="Script" path="res://misc/eventHandler.cs" id="1_bqxet"]
+
+[node name="EventHandler" type="Node"]
+script = ExtResource("1_bqxet")

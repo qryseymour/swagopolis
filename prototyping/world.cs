@@ -6,6 +6,6 @@ public partial class world : Node2D
 {
 	public override void _Ready()
     {
-		RenderingServer.SetDefaultClearColor(Colors.Aqua);
+		  RenderingServer.SetDefaultClearColor(Colors.Aqua);
     }
 }
