@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
-[ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/PrototypePlayerMovementData.tres" id="2_g250b"]
+[ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/prototypePlayerMovementData.tres" id="2_g250b"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]

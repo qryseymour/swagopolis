@@ -1,24 +1,24 @@
 using Godot;
 
 [GlobalClass]
-public partial class EntityMovementData : Resource {
+public partial class entityMovementData : Resource {
     [ExportGroup("Attributes")]
     [Export]
-    public AttributeModifierPack Speed = new AttributeModifierPack(100);
+    public attributeModifierPack Speed = new attributeModifierPack(100);
     [Export]
-	public AttributeModifierPack Acceleration = new AttributeModifierPack(100);
+	public attributeModifierPack Acceleration = new attributeModifierPack(100);
     [Export]
-	public AttributeModifierPack Friction = new AttributeModifierPack(100);
+	public attributeModifierPack Friction = new attributeModifierPack(100);
     [Export]
-	public AttributeModifierPack JumpVelocity = new AttributeModifierPack(-300);
+	public attributeModifierPack JumpVelocity = new attributeModifierPack(-300);
     [Export]
-	public AttributeModifierPack AvailableJumps = new AttributeModifierPack(1);
+	public attributeModifierPack AvailableJumps = new attributeModifierPack(1);
     [Export]
-	public AttributeModifierPack GravityVelocity = new AttributeModifierPack(980);
+	public attributeModifierPack GravityVelocity = new attributeModifierPack(980);
 
-    public EntityMovementData() : this(null, null, null, null, null, null) { }
-    public EntityMovementData(AttributeModifierPack speed, AttributeModifierPack acceleration, AttributeModifierPack friction, 
-    AttributeModifierPack jumpVelocity, AttributeModifierPack availableJumps, AttributeModifierPack gravityVelocity) {
+    public entityMovementData() : this(null, null, null, null, null, null) { }
+    public entityMovementData(attributeModifierPack speed, attributeModifierPack acceleration, attributeModifierPack friction, 
+    attributeModifierPack jumpVelocity, attributeModifierPack availableJumps, attributeModifierPack gravityVelocity) {
         Speed = speed;
         Acceleration = acceleration;
         Friction = friction;

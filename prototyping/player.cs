@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class player : CharacterEntity
+public partial class player : characterEntity
 {
 	// Player variable shadowing
 	public player() {
