@@ -1,10 +1,13 @@
 using Godot;
 using System;
 
-public partial class entity : CharacterBody2D {
+public partial class CharacterEntity : CharacterBody2D {
 	// Important Attributes
 	[Export]
 	public EntityMovementData entityMovementData;
+
+    [Signal]
+    public delegate void InteractableGeometryEventHandler();
 	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
@@ -12,18 +15,21 @@ public partial class entity : CharacterBody2D {
 
 	// Non-Important Attributes
 	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(0, 0, 0.5f);
-	public AttributeModifierPack cutJumpVelocity = null;
-	public AnimatedSprite2D animatedSprite2D = null;
-	public int horizontalMovement = 0;
+	public AttributeModifierPack cutJumpVelocity = null;	public int horizontalMovement = 0;
 	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
 	protected Vector2 velocity;
+	public AnimatedSprite2D animatedSprite2D = null;
 
 	public override void _Ready()
 	{
+        // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        // Signal Event Connections
+        InteractableGeometry += interactableGeometryEvent;
+        // Other stuff
 		cutJumpVelocity = entityMovementData.JumpVelocity + cutJumpFactor;
 	}
 
@@ -84,7 +90,7 @@ public partial class entity : CharacterBody2D {
     }
 
     public virtual void applyGravity(double delta, float gravityPow = 98) {
-		// Add the gravity.
+		// Add the gravity if not on the floor.
 		if (!IsOnFloor()) {
 			velocity.Y += gravityPow * (float)delta;
 		}
@@ -128,6 +134,10 @@ public partial class entity : CharacterBody2D {
 
     protected virtual void restoreJumps()
     {
+        /*
+            If the player is on the floor, they are no longer
+            considered jumping and they restore their jump count.
+        */
         if (IsOnFloor())
         {
             jumpCount = entityMovementData.AvailableJumps.getFinalValue();
@@ -160,4 +170,13 @@ public partial class entity : CharacterBody2D {
 			animatedSprite2D.Play("idle");
 		}
 	}
+
+    public void _OnInteractableGeometry2DBodyEntered(Node2D body) {
+        // Credits to https://www.youtube.com/watch?v=60wBbj1ar8Y for understanding the implementation of the Area2D
+        EmitSignal(SignalName.InteractableGeometry);
+    }
+
+    protected virtual void interactableGeometryEvent() {
+        GD.Print("InteractableGeometryEvent");
+    }
 }

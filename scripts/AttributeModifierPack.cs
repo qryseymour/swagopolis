@@ -104,7 +104,12 @@ public partial class AttributeModifierPack : Resource
     }
     public static AttributeModifierPack operator - (AttributeModifierPack left, AttributeModifierPack right)
     {
-        return new AttributeModifierPack(left.Att_amount - right.Att_amount, left.Att_percentage - right.Att_percentage, left.Att_multiplier * -right.Att_multiplier, left.Att_flatamount - right.Att_flatamount);
+        return new AttributeModifierPack(left.Att_amount - right.Att_amount, left.Att_percentage - right.Att_percentage, left.Att_multiplier / right.Att_multiplier, left.Att_flatamount - right.Att_flatamount);
+    }
+
+    public static AttributeModifierPack operator + (float left, AttributeModifierPack right)
+    {
+        return new AttributeModifierPack(left + right.Att_amount, right.Att_percentage, right.Att_multiplier, right.Att_flatamount);
     }
     public static AttributeModifierPack operator * (AttributeModifierPack left, float right)
     {

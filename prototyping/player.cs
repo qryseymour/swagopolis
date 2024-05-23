@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class player : entity
+public partial class player : CharacterEntity
 {
 	// Player variable shadowing
 	public player() {
@@ -9,14 +9,13 @@ public partial class player : entity
 	}
 
 
+
 	// Non-Important Attributes
 	public float additionalGravityFactor = 2;
 	public float bicycleFactor = 5;
 	public float wallJumpFactor = 3;
-	public Timer coyoteJumpTimer = null;
 	protected bool isFacingRight = true;
-	// Might go unused, but this action exists incase I want to modify what the coyoteJumpTimer timeout event does.
-	protected Action coyoteJumpTimerTimeoutEvent;
+	public Timer coyoteJumpTimer = null;
 
 	public override void _Ready()
 	{
@@ -114,8 +113,7 @@ public partial class player : entity
 		}
 	}
 
-    public void _OnInteractableGeometry2DBodyEntered(Node2D body) {
-        // Credits to https://www.youtube.com/watch?v=60wBbj1ar8Y for understanding the implementation of the Area2D
-        GD.Print("Player Test");
-    }
+	protected override void interactableGeometryEvent() {
+		GD.Print("InteractableGeometryEvent Player");
+	}
 }
