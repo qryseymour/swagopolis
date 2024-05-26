@@ -1,24 +1,25 @@
 using Godot;
 using System;
 
-public partial class characterEntity : CharacterBody2D {
+public partial class CharacterEntity : CharacterBody2D {
 	// Important Attributes
 	[Export]
-	public entityMovementData entityMovementData;
+	public EntityMovementData entityMovementData;
 	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
 
 
 	// Non-Important Attributes
-	public attributeModifierPack cutJumpFactor = new attributeModifierPack(0, 0, 0.5f);
-	public attributeModifierPack cutJumpVelocity = null;
+	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(0, 0, 0.5f);
+	public AttributeModifierPack cutJumpVelocity = null;
     public int horizontalMovement = 0;
 	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
 	protected Vector2 velocity;
+    public Vector2 startingPosition;
 	public AnimatedSprite2D animatedSprite2D = null;
 
 	public override void _Ready()
@@ -28,6 +29,7 @@ public partial class characterEntity : CharacterBody2D {
         // Signal Event Connections
         // Other stuff
 		cutJumpVelocity = entityMovementData.JumpVelocity + cutJumpFactor;
+        startingPosition = GlobalPosition;
 	}
 
 	public override void _PhysicsProcess(double delta)

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3f426pbxwtcs"]
+
+[ext_resource type="Texture2D" uid="uid://c82lom53ahxij" path="res://prototyping/base_tilemap_packed.png" id="1_28bb1"]
+[ext_resource type="Script" path="res://prototyping/spikes.cs" id="1_bnx7l"]
+
+[node name="Spikes" type="Node2D"]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_bnx7l")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -18)
+texture = ExtResource("1_28bb1")
+centered = false
+region_enabled = true
+region_rect = Rect2(144, 54, 18, 18)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 65
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+polygon = PackedVector2Array(0, 0, 0, -4, 2, -8, 16, -8, 18, -4, 18, 0)
+
+[connection signal="area_entered" from="Area2D" to="." method="_onEntityEnterArea2D"]

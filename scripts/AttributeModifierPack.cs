@@ -15,7 +15,7 @@ using Godot;
 /// Attributes perserve the modifiers used in the calculations to
 /// prevent any overrides.
 /// </summary> 
-public partial class attributeModifierPack : Resource
+public partial class AttributeModifierPack : Resource
 {
     [ExportGroup("Operations")]
     private float att_amount;
@@ -59,14 +59,14 @@ public partial class attributeModifierPack : Resource
     private float att_finalvalue;
 
     // Basic operators
-    public attributeModifierPack() {
+    public AttributeModifierPack() {
         att_amount = 0;
         att_percentage = 0;
         att_multiplier = 1;
         att_flatamount = 0;
         calculateFinalValue();
     }
-    public attributeModifierPack(float amount = 0, float percentage = 0, float multiplier = 1, float flatamount = 0) {
+    public AttributeModifierPack(float amount = 0, float percentage = 0, float multiplier = 1, float flatamount = 0) {
         att_amount = amount;
         att_percentage = percentage;
         att_multiplier = multiplier;
@@ -74,7 +74,7 @@ public partial class attributeModifierPack : Resource
         calculateFinalValue();
     }
 
-    public attributeModifierPack(attributeModifierPack att) {
+    public AttributeModifierPack(AttributeModifierPack att) {
         att_amount = att.Att_amount;
         att_percentage = att.Att_percentage;
         att_multiplier = att.Att_multiplier;
@@ -90,37 +90,37 @@ public partial class attributeModifierPack : Resource
         return att_finalvalue;
     }
 
-    public static bool operator ==(attributeModifierPack left, attributeModifierPack right) {
+    public static bool operator ==(AttributeModifierPack left, AttributeModifierPack right) {
         return (left.Att_amount == right.Att_amount) && (left.Att_percentage == right.Att_percentage) && (left.Att_multiplier == right.Att_multiplier) && (left.Att_flatamount == right.Att_flatamount);
     }
 
-    public static bool operator !=(attributeModifierPack left, attributeModifierPack right) {
+    public static bool operator !=(AttributeModifierPack left, AttributeModifierPack right) {
         return !(left == right);
     }
 
-    public static attributeModifierPack operator + (attributeModifierPack left, attributeModifierPack right)
+    public static AttributeModifierPack operator + (AttributeModifierPack left, AttributeModifierPack right)
     {
-        return new attributeModifierPack(left.Att_amount + right.Att_amount, left.Att_percentage + right.Att_percentage, left.Att_multiplier * right.Att_multiplier, left.Att_flatamount + right.Att_flatamount);
+        return new AttributeModifierPack(left.Att_amount + right.Att_amount, left.Att_percentage + right.Att_percentage, left.Att_multiplier * right.Att_multiplier, left.Att_flatamount + right.Att_flatamount);
     }
-    public static attributeModifierPack operator - (attributeModifierPack left, attributeModifierPack right)
+    public static AttributeModifierPack operator - (AttributeModifierPack left, AttributeModifierPack right)
     {
-        return new attributeModifierPack(left.Att_amount - right.Att_amount, left.Att_percentage - right.Att_percentage, left.Att_multiplier / right.Att_multiplier, left.Att_flatamount - right.Att_flatamount);
-    }
-
-    public static attributeModifierPack operator + (float left, attributeModifierPack right)
-    {
-        return new attributeModifierPack(left + right.Att_amount, right.Att_percentage, right.Att_multiplier, right.Att_flatamount);
-    }
-    public static attributeModifierPack operator * (attributeModifierPack left, float right)
-    {
-        return new attributeModifierPack(left.Att_amount * right, left.Att_percentage * right, left.Att_multiplier * right, left.Att_flatamount * right);
-    }
-    public static attributeModifierPack operator / (attributeModifierPack left, float right)
-    {
-        return new attributeModifierPack(left.Att_amount / right, left.Att_percentage / right, left.Att_multiplier / right, left.Att_flatamount / right);
+        return new AttributeModifierPack(left.Att_amount - right.Att_amount, left.Att_percentage - right.Att_percentage, left.Att_multiplier / right.Att_multiplier, left.Att_flatamount - right.Att_flatamount);
     }
 
-    public static explicit operator float(attributeModifierPack att) {
+    public static AttributeModifierPack operator + (float left, AttributeModifierPack right)
+    {
+        return new AttributeModifierPack(left + right.Att_amount, right.Att_percentage, right.Att_multiplier, right.Att_flatamount);
+    }
+    public static AttributeModifierPack operator * (AttributeModifierPack left, float right)
+    {
+        return new AttributeModifierPack(left.Att_amount * right, left.Att_percentage * right, left.Att_multiplier * right, left.Att_flatamount * right);
+    }
+    public static AttributeModifierPack operator / (AttributeModifierPack left, float right)
+    {
+        return new AttributeModifierPack(left.Att_amount / right, left.Att_percentage / right, left.Att_multiplier / right, left.Att_flatamount / right);
+    }
+
+    public static explicit operator float(AttributeModifierPack att) {
         return att.getFinalValue();
     }
 
@@ -142,5 +142,6 @@ public partial class attributeModifierPack : Resource
     public override int GetHashCode()
     {
         throw new System.NotImplementedException();
+        //Test
     }
 }

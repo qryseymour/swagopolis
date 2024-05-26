@@ -30,9 +30,12 @@ project/assembly_name="Swagopolis"
 [layer_names]
 
 2d_physics/layer_1="Important Objects"
-2d_physics/layer_2="Players"
+2d_physics/layer_2="Entities"
 2d_physics/layer_3="Geometry"
-2d_physics/layer_4="InteractiveGeometry"
+2d_physics/layer_4="PlayerOnlyGeometry"
+2d_physics/layer_5="SpriteOnlyGeometry"
+2d_physics/layer_6="ProjectileOnlyGeometry"
+2d_physics/layer_7="InteractableGeometry"
 
 [rendering]
 
