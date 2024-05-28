@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://gj2irwu41axl"]
+[gd_scene load_steps=5 format=3 uid="uid://gj2irwu41axl"]
 
-[ext_resource type="PackedScene" uid="uid://c3f426pbxwtcs" path="res://prototyping/spikes.tscn" id="1_lvs4q"]
 [ext_resource type="Script" path="res://prototyping/SpecialTiles.cs" id="2_52crw"]
 [ext_resource type="Texture2D" uid="uid://c82lom53ahxij" path="res://prototyping/base_tilemap_packed.png" id="2_n4y3t"]
 
@@ -76,7 +75,6 @@ texture_region_size = Vector2i(18, 18)
 6:3/0 = 0
 7:3/0 = 0
 8:3/0 = 0
-8:3/0/custom_data_0 = "spikes"
 9:3/0 = 0
 10:3/0 = 0
 11:3/0 = 0
@@ -192,7 +190,7 @@ texture_region_size = Vector2i(18, 18)
 [sub_resource type="TileSet" id="TileSet_bbsh4"]
 tile_size = Vector2i(18, 18)
 custom_data_layer_0/name = "preload"
-custom_data_layer_0/type = 4
+custom_data_layer_0/type = 22
 sources/0 = SubResource("TileSetAtlasSource_he4v4")
 
 [node name="SpecialTiles" type="TileMap"]
@@ -200,6 +198,3 @@ scale = Vector2(0.5, 0.5)
 tile_set = SubResource("TileSet_bbsh4")
 format = 2
 script = ExtResource("2_52crw")
-
-[node name="ResourcePreloader" type="ResourcePreloader" parent="."]
-resources = [PackedStringArray("spikes"), [ExtResource("1_lvs4q")]]

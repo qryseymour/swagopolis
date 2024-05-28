@@ -3,20 +3,24 @@ using System;
 
 public partial class SpecialTiles : TileMap
 {
-	private ResourcePreloader resourcePreloader;
-
 	public override void _Ready()
 	{
-		resourcePreloader = GetNode<ResourcePreloader>("ResourcePreloader");
-		foreach (Vector2I cellPos in GetUsedCells(0)) {
-			TileData data = GetCellTileData(0, cellPos);
+		// For each of the tiles within the designated layer, retrieve their tile data.
+		foreach (Vector2I tilePos in GetUsedCells(0)) {
+			TileData data = GetCellTileData(0, tilePos);
 			if (data != null) {
-				// TODO: Prevent error
-				Resource preloadedObj = resourcePreloader.GetResource(data.GetCustomData("preload").Obj as StringName);
-				if (preloadedObj != null) {
-					// Instance the new resource, set position, and add child
-					SetCell(0, cellPos, -1);
-				}
+				/* 
+					Each valid tile has a custom data that points
+					to a specific object. During the foreach loop,
+					that refered object is instantiated, placed at
+					it's tile position, and added as a child to the
+					custom object. Then the original tile is... uh,
+					aborted.
+				*/
+				Node2D customObj = ResourceLoader.Load<PackedScene>("res://prototyping/spikes.tscn").Instantiate() as Node2D;
+				customObj.Position = MapToLocal(tilePos);
+				AddChild(customObj);
+				SetCell(0, tilePos, -1);
 			}
 		}
 	}
