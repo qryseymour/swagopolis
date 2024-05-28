@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://daecnm1ydt3it"]
+[gd_scene load_steps=8 format=3 uid="uid://daecnm1ydt3it"]
 
 [ext_resource type="Texture2D" uid="uid://cuud2p7y5ynqe" path="res://prototyping/tilemap_packed.png" id="1_ur2i4"]
 [ext_resource type="Texture2D" uid="uid://c82lom53ahxij" path="res://prototyping/base_tilemap_packed.png" id="2_d3gku"]
+[ext_resource type="PackedScene" uid="uid://c3f426pbxwtcs" path="res://prototyping/spikes.tscn" id="3_eqpop"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qncvo"]
 texture = ExtResource("1_ur2i4")
@@ -1301,6 +1302,10 @@ texture_region_size = Vector2i(18, 18)
 19:8/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 19:8/0/physics_layer_0/angular_velocity = 0.0
 
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_5dxrk"]
+resource_name = "hazards"
+scenes/1/scene = ExtResource("3_eqpop")
+
 [sub_resource type="TileSet" id="TileSet_bnu8f"]
 tile_size = Vector2i(18, 18)
 physics_layer_0/collision_layer = 5
@@ -1318,6 +1323,7 @@ terrain_set_0/terrain_4/name = "Mushrooms"
 terrain_set_0/terrain_4/color = Color(0.133333, 0.733333, 0.827451, 1)
 sources/0 = SubResource("TileSetAtlasSource_qncvo")
 sources/1 = SubResource("TileSetAtlasSource_xntje")
+sources/2 = SubResource("TileSetScenesCollectionSource_5dxrk")
 
 [node name="KennedyPrototypeTiles" type="TileMap"]
 scale = Vector2(0.5, 0.5)
