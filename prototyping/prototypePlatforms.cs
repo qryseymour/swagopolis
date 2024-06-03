@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class PrototypePlatforms : StaticBody2D
+public partial class prototypePlatforms : StaticBody2D
 {
 	private Polygon2D polygon2D = null;
     private CollisionPolygon2D collisionPolygon2D = null;
