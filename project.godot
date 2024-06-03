@@ -27,6 +27,11 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="Swagopolis"
 
+[editor]
+
+version_control/plugin_name="GitPlugin"
+version_control/autoload_on_startup=true
+
 [layer_names]
 
 2d_physics/layer_1="Important Objects"
