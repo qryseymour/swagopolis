@@ -2,12 +2,12 @@ using Godot;
 using System;
 
 public partial class statusEffectTag : Node {
-    private CharacterEntity owner;
+    private characterEntity owner;
 
     public override void _Ready()
     {
-        if (GetParent() is CharacterEntity) {
-            owner = GetParent() as CharacterEntity;
+        if (GetParent() is characterEntity) {
+            owner = GetParent() as characterEntity;
         }
     }
 }
