@@ -1,18 +1,18 @@
 using Godot;
 using System;
 
-public partial class CharacterEntity : CharacterBody2D {
+public partial class characterEntity : CharacterBody2D {
 	// Important Attributes
 	[Export]
-	public EntityMovementData entityMovementData;
+	public entityMovementData entityMovementData;
 	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
 
 
 	// Non-Important Attributes
-	public AttributeModifierPack cutJumpFactor = new AttributeModifierPack(0, 0, 0.5f);
-	public AttributeModifierPack cutJumpVelocity = null;
+	public attributeModifierPack cutJumpFactor = new attributeModifierPack(0, 0, 0.5f);
+	public attributeModifierPack cutJumpVelocity = null;
     public int horizontalMovement = 0;
 	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
