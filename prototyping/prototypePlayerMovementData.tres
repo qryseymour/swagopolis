@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EntityMovementData" load_steps=9 format=3 uid="uid://u8tvanrn5h15"]
+[gd_resource type="Resource" script_class="entityMovementData" load_steps=9 format=3 uid="uid://u8tvanrn5h15"]
 
 [ext_resource type="Script" path="res://scripts/attributeModifierPack.cs" id="1_y783a"]
 [ext_resource type="Script" path="res://chars/entityMovementData.cs" id="2_ytatp"]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://daecnm1ydt3it"]
+[gd_scene load_steps=9 format=3 uid="uid://daecnm1ydt3it"]
 
 [ext_resource type="Texture2D" uid="uid://cuud2p7y5ynqe" path="res://prototyping/tilemap_packed.png" id="1_ur2i4"]
 [ext_resource type="Texture2D" uid="uid://c82lom53ahxij" path="res://prototyping/base_tilemap_packed.png" id="2_d3gku"]
 [ext_resource type="PackedScene" uid="uid://c3f426pbxwtcs" path="res://prototyping/spikes.tscn" id="3_eqpop"]
+[ext_resource type="PackedScene" uid="uid://mmaty5tm1r57" path="res://prototyping/heart.tscn" id="4_csgey"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qncvo"]
 texture = ExtResource("1_ur2i4")
@@ -1305,6 +1306,7 @@ texture_region_size = Vector2i(18, 18)
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_5dxrk"]
 resource_name = "hazards"
 scenes/1/scene = ExtResource("3_eqpop")
+scenes/2/scene = ExtResource("4_csgey")
 
 [sub_resource type="TileSet" id="TileSet_bnu8f"]
 tile_size = Vector2i(18, 18)
@@ -1325,7 +1327,7 @@ sources/0 = SubResource("TileSetAtlasSource_qncvo")
 sources/1 = SubResource("TileSetAtlasSource_xntje")
 sources/2 = SubResource("TileSetScenesCollectionSource_5dxrk")
 
-[node name="KennedyPrototypeTiles" type="TileMap"]
+[node name="KennedyPrototypeTiles" type="TileMap" groups=["ImportantThing", "Tilemap"]]
 scale = Vector2(0.5, 0.5)
 tile_set = SubResource("TileSet_bnu8f")
 format = 2

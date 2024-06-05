@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://c82lom53ahxij" path="res://prototyping/base_tilemap_packed.png" id="1_28bb1"]
 [ext_resource type="Script" path="res://prototyping/spikes.cs" id="1_bnx7l"]
 
-[node name="Spikes" type="Node2D"]
+[node name="Spikes" type="Node2D" groups=["ImportantThing", "InteractableGeometry"]]
 script = ExtResource("1_bnx7l")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
