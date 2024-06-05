@@ -4,6 +4,8 @@ using System.Drawing;
 
 public partial class world : Node2D
 {
+    [Export]
+    public PackedScene nextLevel;
 	public override void _Ready()
     {
 		RenderingServer.SetDefaultClearColor(Colors.Aqua);
@@ -11,7 +13,15 @@ public partial class world : Node2D
     }
 
     private void showLevelCompleted() {
-        GD.Print("Display the screen");
-        GetNode<ColorRect>("CanvasLayer/LevelCompletedHud").Show();
+        if (nextLevel is PackedScene) {
+            CallDeferred(nameof(changeLevel));
+        }
+        else {    
+            GetNode<ColorRect>("CanvasLayer/LevelCompletedHud").Show();
+        }
+    }
+
+    private void changeLevel() {
+        GetTree().ChangeSceneToPacked(nextLevel);
     }
 }
