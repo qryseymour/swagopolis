@@ -13,8 +13,11 @@ public partial class player : characterEntity
 	// Non-Important Attributes
 	public float additionalGravityFactor = 2;
 	public float bicycleFactor = 5;
-	public float wallJumpFactor = 3;
-	protected bool isFacingRight = true;
+
+
+
+	// Fundamental Variables
+	protected bool justFacedRight = true;
 	public Timer coyoteJumpTimer = null;
 
 	public override void _Ready()
@@ -72,7 +75,7 @@ public partial class player : characterEntity
 			the floor. I don't know why I'm making dumb comments
 			like these.
 		*/
-		justLeftLedge = wasOnFloor && !IsOnFloor() && velocity.Y >= 0;
+		justLeftLedge = wasOnFloor && !IsOnFloor() && baseVelocity.Y >= 0;
 		if (justLeftLedge) {
 			coyoteJumpTimer.Start();
 		}
@@ -90,7 +93,7 @@ public partial class player : characterEntity
 		*/
 		if (!IsOnFloor() && IsOnWall())
 		{
-			velocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
+			baseVelocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
 			jumpCount++;
 		}
 		base.controlJumps();
@@ -105,10 +108,10 @@ public partial class player : characterEntity
 			margins. More of this mechanic will be improved further
 			down the line.
 		*/
-		if (isFacingRight && horizontalMovement < 0 || !isFacingRight && horizontalMovement > 0) {
-			isFacingRight = !isFacingRight;
-			if (velocity.Y > 0) {
-				velocity.Y /= bicycleFactor;
+		if (justFacedRight && horizontalMovement < 0 || !justFacedRight && horizontalMovement > 0) {
+			justFacedRight = !justFacedRight;
+			if (baseVelocity.Y > 0) {
+				baseVelocity.Y /= bicycleFactor;
 			}
 		}
 	}

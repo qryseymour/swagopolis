@@ -5,7 +5,6 @@ public partial class characterEntity : CharacterBody2D {
 	// Important Attributes
 	[Export]
 	public entityMovementData entityMovementData;
-	public float jumpCount = 0;
     public bool canJumpMidair = false;
 
 
@@ -13,14 +12,29 @@ public partial class characterEntity : CharacterBody2D {
 	// Non-Important Attributes
 	public attributeModifierPack cutJumpFactor = new attributeModifierPack(0, 0, 0.5f);
 	public attributeModifierPack cutJumpVelocity = null;
+
+
+    
+	// Fundamental Variables
+    public forceDictionary appliedExternalForces = new forceDictionary();
+	protected Vector2 baseVelocity;
+    private Vector2 additionalForces;
     public int horizontalMovement = 0;
-	public bool isJumping = false;
 	protected int startedHoldingRight = 0;
+	public bool isJumping = false;
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
-	protected Vector2 velocity;
+	public float jumpCount = 0;
     public Vector2 startingPosition;
+
+
+
+    // Node references
 	public AnimatedSprite2D animatedSprite2D = null;
+
+    
+
+    public isolatedVelocity testVelocity = new isolatedVelocity(Vector2.Left * 135, 180);
 
 	public override void _Ready()
 	{
@@ -34,9 +48,14 @@ public partial class characterEntity : CharacterBody2D {
 
 	public override void _PhysicsProcess(double delta)
     {
-        velocity = Velocity;
+        baseVelocity = Velocity - additionalForces;
         controlCharacterPhysics(delta);
-        Velocity = velocity;
+        if (Input.IsKeyPressed(Key.W)) {
+            appliedExternalForces.addVelocity(this, testVelocity);
+        }
+        additionalForces = appliedExternalForces.extractAllForcesPerFrame() * (float)delta;
+        baseVelocity += additionalForces;
+        Velocity = baseVelocity;
         MoveAndSlide();
     }
 
@@ -91,7 +110,7 @@ public partial class characterEntity : CharacterBody2D {
     public virtual void applyGravity(double delta, float gravityPow = 98) {
 		// Add the gravity if not on the floor.
 		if (!IsOnFloor()) {
-			velocity.Y += gravityPow * (float)delta;
+			baseVelocity.Y += gravityPow * (float)delta;
 		}
 	}
 
@@ -105,7 +124,7 @@ public partial class characterEntity : CharacterBody2D {
         if (!IsOnFloor())
         {
             // Good form to put more taxing calculations/checks after the &&'s.
-            if (Input.IsActionJustReleased("ui_accept") && Velocity.Y < cutJumpVelocity.getFinalValue())
+            if (Input.IsActionJustReleased("ui_accept") && baseVelocity.Y < cutJumpVelocity.getFinalValue())
             {
                 applyJump(cutJumpVelocity.getFinalValue());
             }
@@ -145,19 +164,19 @@ public partial class characterEntity : CharacterBody2D {
     }
 
     public virtual void applyJump(float jumpPow = -300) {
-		velocity.Y = jumpPow;
+		baseVelocity.Y = jumpPow;
         isJumping = true;
 	}
 
 	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
 		if (movementDirection != 0) { 
-			velocity.X = Mathf.MoveToward(Velocity.X, movementDirection * speedPow, 
+			baseVelocity.X = Mathf.MoveToward(baseVelocity.X, movementDirection * speedPow, 
 			accelerationPow * 60 * (float)delta);
 		} 
 	}
 
 	public virtual void applyFriction(double delta, float speedPow = 100, float frictionPow = 100) {
-		velocity.X = Mathf.MoveToward(Velocity.X, 0, 
+		baseVelocity.X = Mathf.MoveToward(baseVelocity.X, 0, 
 		frictionPow * 60 * (float)delta);
 	}
 

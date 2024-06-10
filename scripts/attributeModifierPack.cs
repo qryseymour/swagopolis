@@ -90,6 +90,11 @@ public partial class attributeModifierPack : Resource
         return att_finalvalue;
     }
 
+
+
+
+
+    // Operator Overloads
     public static bool operator ==(attributeModifierPack left, attributeModifierPack right) {
         return (left.Att_amount == right.Att_amount) && (left.Att_percentage == right.Att_percentage) && (left.Att_multiplier == right.Att_multiplier) && (left.Att_flatamount == right.Att_flatamount);
     }
@@ -98,26 +103,27 @@ public partial class attributeModifierPack : Resource
         return !(left == right);
     }
 
-    public static attributeModifierPack operator + (attributeModifierPack left, attributeModifierPack right)
-    {
+    public static attributeModifierPack operator + (attributeModifierPack left, attributeModifierPack right) {
         return new attributeModifierPack(left.Att_amount + right.Att_amount, left.Att_percentage + right.Att_percentage, left.Att_multiplier * right.Att_multiplier, left.Att_flatamount + right.Att_flatamount);
     }
-    public static attributeModifierPack operator - (attributeModifierPack left, attributeModifierPack right)
-    {
+    public static attributeModifierPack operator - (attributeModifierPack left, attributeModifierPack right) {
         return new attributeModifierPack(left.Att_amount - right.Att_amount, left.Att_percentage - right.Att_percentage, left.Att_multiplier / right.Att_multiplier, left.Att_flatamount - right.Att_flatamount);
     }
 
-    public static attributeModifierPack operator + (float left, attributeModifierPack right)
-    {
+    public static attributeModifierPack operator + (float left, attributeModifierPack right) {
         return new attributeModifierPack(left + right.Att_amount, right.Att_percentage, right.Att_multiplier, right.Att_flatamount);
     }
-    public static attributeModifierPack operator * (attributeModifierPack left, float right)
-    {
+    public static attributeModifierPack operator + (attributeModifierPack left, float right) {
+        return right + left;
+    }
+    public static attributeModifierPack operator - (attributeModifierPack left, float right) {
+        return left + (right * -1);
+    }
+    public static attributeModifierPack operator * (attributeModifierPack left, float right) {
         return new attributeModifierPack(left.Att_amount * right, left.Att_percentage * right, left.Att_multiplier * right, left.Att_flatamount * right);
     }
-    public static attributeModifierPack operator / (attributeModifierPack left, float right)
-    {
-        return new attributeModifierPack(left.Att_amount / right, left.Att_percentage / right, left.Att_multiplier / right, left.Att_flatamount / right);
+    public static attributeModifierPack operator / (attributeModifierPack left, float right) {
+        return left * (1 / right);
     }
 
     public static explicit operator float(attributeModifierPack att) {
