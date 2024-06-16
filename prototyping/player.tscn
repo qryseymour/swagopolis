@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
-[ext_resource type="Resource" uid="uid://u8tvanrn5h15" path="res://prototyping/prototypePlayerMovementData.tres" id="2_rrfav"]
+[ext_resource type="Resource" uid="uid://ctuenhqaagw22" path="res://chars/defaultEntityBattleData.tres" id="2_yifut"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
 size = Vector2(6, 16)
@@ -54,11 +54,11 @@ animations = [{
 [node name="Player" type="CharacterBody2D" groups=["Entity", "ImportantThing", "Player"]]
 position = Vector2(0, -10)
 collision_layer = 3
-collision_mask = 12
+collision_mask = 14
 floor_constant_speed = true
 floor_snap_length = 3.0
 script = ExtResource("1_gugc5")
-entityMovementData = ExtResource("2_rrfav")
+entityBattleData = ExtResource("2_yifut")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)

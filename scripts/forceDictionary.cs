@@ -11,16 +11,16 @@ using System.Collections.Generic;
 /// </summary> 
 public class forceDictionary
 {
-    private Dictionary<Node, isolatedVelocity> forceDic_forces = new Dictionary<Node, isolatedVelocity>();
+    private Dictionary<string, isolatedVelocity> forceDic_forces = new Dictionary<string, isolatedVelocity>();
 
-    public forceDictionary(Dictionary<Node, isolatedVelocity> forces = null) {
+    public forceDictionary(Dictionary<string, isolatedVelocity> forces = null) {
         if (forces != null) {
             forceDic_forces = forces;
         }
     }
 
     public forceDictionary(forceDictionary forceDic) {
-        forceDic_forces = new Dictionary<Node, isolatedVelocity>(forceDic.forceDic_forces);
+        forceDic_forces = new Dictionary<string, isolatedVelocity>(forceDic.forceDic_forces);
     }
 
     public Vector2 extractAllForcesPerFrame() {
@@ -30,7 +30,7 @@ public class forceDictionary
             the result as the culimation of all acting forces.
         */
         Vector2 velocity = new Vector2();
-        foreach(KeyValuePair<Node, isolatedVelocity> entry in forceDic_forces)
+        foreach(KeyValuePair<string, isolatedVelocity> entry in forceDic_forces)
         {
             if (entry.Value.iso_frames > 0) {
                 velocity += entry.Value.getVector2();
@@ -46,7 +46,7 @@ public class forceDictionary
 
     public Vector2 extractAllForces() {
         Vector2 velocity = new Vector2();
-        foreach(KeyValuePair<Node, isolatedVelocity> entry in forceDic_forces)
+        foreach(KeyValuePair<string, isolatedVelocity> entry in forceDic_forces)
         {
             if (entry.Value.iso_frames > 0) {
                 velocity += entry.Value.getVector2();
@@ -57,36 +57,36 @@ public class forceDictionary
         return velocity;
     }
 
-    public bool addVelocity(Node node, isolatedVelocity isoVelocity) {
+    public bool addVelocity(string str, isolatedVelocity isoVelocity) {
         bool addedVelocity = false;
-        if (!forceDic_forces.ContainsKey(node)) {
-            forceDic_forces.Add(node, new isolatedVelocity(isoVelocity));
+        if (!forceDic_forces.ContainsKey(str)) {
+            forceDic_forces.Add(str, new isolatedVelocity(isoVelocity));
             addedVelocity = true;
         }
         return addedVelocity;
     }
 
-    public bool modifyVelocity(Node node, isolatedVelocity isoVelocity) {
+    public bool modifyVelocity(string str, isolatedVelocity isoVelocity) {
         bool modifiedVelocity = false;
-        if (forceDic_forces.ContainsKey(node)) {
-            forceDic_forces[node] = new isolatedVelocity(isoVelocity);
+        if (forceDic_forces.ContainsKey(str)) {
+            forceDic_forces[str] = new isolatedVelocity(isoVelocity);
             modifiedVelocity = true;
         }
         return modifiedVelocity;
     }
 
-    public void addOrModifyVelocity(Node node, isolatedVelocity isoVelocity) {
-        if (forceDic_forces.ContainsKey(node)) {
-            forceDic_forces[node] = new isolatedVelocity(isoVelocity);
+    public void addOrModifyVelocity(string str, isolatedVelocity isoVelocity) {
+        if (forceDic_forces.ContainsKey(str)) {
+            forceDic_forces[str] = new isolatedVelocity(isoVelocity);
         } else {
-            forceDic_forces.Add(node, new isolatedVelocity(isoVelocity));
+            forceDic_forces.Add(str, new isolatedVelocity(isoVelocity));
         }
     }
 
-    public bool removeVelocity(Node node) {
+    public bool removeVelocity(string str) {
         bool removedVelocity = false;
-        if (forceDic_forces.ContainsKey(node)) {
-            forceDic_forces.Remove(node);
+        if (forceDic_forces.ContainsKey(str)) {
+            forceDic_forces.Remove(str);
             removedVelocity = true;
         }
         return removedVelocity;
@@ -99,7 +99,7 @@ public class forceDictionary
     // Operator Overloads
     public static forceDictionary operator + (forceDictionary left, forceDictionary right) {
         forceDictionary merged = new forceDictionary(left);
-        foreach(KeyValuePair<Node, isolatedVelocity> entry in right.forceDic_forces)
+        foreach(KeyValuePair<string, isolatedVelocity> entry in right.forceDic_forces)
         {
             merged.addVelocity(entry.Key, entry.Value);
         }

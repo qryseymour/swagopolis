@@ -1,0 +1,167 @@
+[gd_resource type="Resource" script_class="entityBattleData" load_steps=23 format=3 uid="uid://ctuenhqaagw22"]
+
+[ext_resource type="Script" path="res://scripts/attributeModifierPack.cs" id="1_y51nl"]
+[ext_resource type="Script" path="res://chars/entityBattleData.cs" id="2_hot0x"]
+
+[sub_resource type="Resource" id="Resource_gk0hf"]
+script = ExtResource("1_y51nl")
+Att_amount = 11.25
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_hhma2"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_bp80v"]
+script = ExtResource("1_y51nl")
+Att_amount = 1.0
+Att_percentage = 0.0
+Att_multiplier = 2.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_1q8na"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_b1nd0"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_rfwuo"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_w4bqh"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_j0fax"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_yxvuv"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_1fm7b"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_ih1k8"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_xuih1"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_s5ug2"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_xcf2e"]
+script = ExtResource("1_y51nl")
+Att_amount = 18.75
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_hcka0"]
+script = ExtResource("1_y51nl")
+Att_amount = 980.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_c40xy"]
+script = ExtResource("1_y51nl")
+Att_amount = -300.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_73gwc"]
+script = ExtResource("1_y51nl")
+Att_amount = 0.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_6nvs5"]
+script = ExtResource("1_y51nl")
+Att_amount = 50.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_rph5g"]
+script = ExtResource("1_y51nl")
+Att_amount = 50.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[sub_resource type="Resource" id="Resource_krbqu"]
+script = ExtResource("1_y51nl")
+Att_amount = 135.0
+Att_percentage = 0.0
+Att_multiplier = 1.0
+Att_flatamount = 0.0
+
+[resource]
+script = ExtResource("2_hot0x")
+MaxHealth = SubResource("Resource_6nvs5")
+MaxMana = SubResource("Resource_rph5g")
+AttackSpeed = SubResource("Resource_hhma2")
+Defense = SubResource("Resource_1q8na")
+Speed = SubResource("Resource_krbqu")
+Luck = SubResource("Resource_73gwc")
+Acceleration = SubResource("Resource_gk0hf")
+Friction = SubResource("Resource_xcf2e")
+JumpVelocity = SubResource("Resource_c40xy")
+AvailableJumps = SubResource("Resource_bp80v")
+GravityVelocity = SubResource("Resource_hcka0")
+ExtraHealingDealt = SubResource("Resource_j0fax")
+ExtraHealingReceived = SubResource("Resource_yxvuv")
+ExtraDamageDealt = SubResource("Resource_b1nd0")
+ExtraDamageReceived = SubResource("Resource_rfwuo")
+ExtraKnockbackDealt = SubResource("Resource_1fm7b")
+ExtraKnockbackReceived = SubResource("Resource_ih1k8")
+ExtraProjectileRange = SubResource("Resource_xuih1")
+ExtraProjectileSpeed = SubResource("Resource_s5ug2")
+ExtraExplosionSize = SubResource("Resource_w4bqh")

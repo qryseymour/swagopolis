@@ -2,9 +2,11 @@ using Godot;
 using System;
 
 public partial class characterEntity : CharacterBody2D {
-	// Important Attributes
+    // Important Attributes
+    [Export]
+    public string realName = "Dummy";
 	[Export]
-	public entityMovementData entityMovementData;
+	public entityBattleData entityBattleData;
     public bool canJumpMidair = false;
 
 
@@ -34,15 +36,16 @@ public partial class characterEntity : CharacterBody2D {
 
     
 
-    public isolatedVelocity testVelocity = new isolatedVelocity(Vector2.Left * 135, 180);
+    public isolatedVelocity testVelocity = new isolatedVelocity(Vector2.Left * 135, 180, (Vector2 ind_velocity, uint ind_frames) => { return ind_velocity * ind_frames / 180; });
 
 	public override void _Ready()
 	{
+        entityBattleData = (entityBattleData)entityBattleData.Duplicate(true);
         // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         // Signal Event Connections
         // Other stuff
-		cutJumpVelocity = entityMovementData.JumpVelocity + cutJumpFactor;
+		cutJumpVelocity = entityBattleData.JumpVelocity + cutJumpFactor;
         startingPosition = GlobalPosition;
 	}
 
@@ -51,7 +54,7 @@ public partial class characterEntity : CharacterBody2D {
         baseVelocity = Velocity - additionalForces;
         controlCharacterPhysics(delta);
         if (Input.IsKeyPressed(Key.W)) {
-            appliedExternalForces.addVelocity(this, testVelocity);
+            appliedExternalForces.addVelocity(realName, testVelocity);
         }
         additionalForces = appliedExternalForces.extractAllForcesPerFrame() * (float)delta;
         baseVelocity += additionalForces;
@@ -63,10 +66,10 @@ public partial class characterEntity : CharacterBody2D {
     {
         handleGravity(delta);
         handleHorizontalDirection();
-        applyAcceleration(delta, horizontalMovement, entityMovementData.Speed.getFinalValue(), entityMovementData.Acceleration.getFinalValue());
+        applyAcceleration(delta, horizontalMovement, entityBattleData.Speed.getFinalValue(), entityBattleData.Acceleration.getFinalValue());
         if (horizontalMovement == 0)
         {
-            applyFriction(delta, entityMovementData.Speed.getFinalValue(), entityMovementData.Friction.getFinalValue());
+            applyFriction(delta, entityBattleData.Speed.getFinalValue(), entityBattleData.Friction.getFinalValue());
         }
 		/*
 			This line acts as a divider between all internal
@@ -82,7 +85,7 @@ public partial class characterEntity : CharacterBody2D {
 
     protected virtual void handleGravity(double delta)
     {
-        applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
+        applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue());
     }
 
     protected virtual void handleHorizontalDirection()
@@ -140,12 +143,12 @@ public partial class characterEntity : CharacterBody2D {
         */
         if (jumpCount >= 1)
         {
-            applyJump(entityMovementData.JumpVelocity.getFinalValue());
+            applyJump(entityBattleData.JumpVelocity.getFinalValue());
             jumpCount--;
         }
         else if (jumpCount > 0)
         {
-            applyJump(entityMovementData.JumpVelocity.getFinalValue() * jumpCount);
+            applyJump(entityBattleData.JumpVelocity.getFinalValue() * jumpCount);
             jumpCount = 0;
         }
     }
@@ -158,7 +161,7 @@ public partial class characterEntity : CharacterBody2D {
         */
         if (IsOnFloor())
         {
-            jumpCount = entityMovementData.AvailableJumps.getFinalValue();
+            jumpCount = entityBattleData.AvailableJumps.getFinalValue();
             isJumping = false;
         }
     }

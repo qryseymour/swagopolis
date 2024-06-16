@@ -51,18 +51,18 @@ public partial class player : characterEntity
     {
         if (Input.IsActionPressed("ui_down"))
         {
-            applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue() * additionalGravityFactor);
+            applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue() * additionalGravityFactor);
         }
         else
         {
-            applyGravity(delta, entityMovementData.GravityVelocity.getFinalValue());
+            applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue());
         }
     }
 	protected override void restoreJumps()
     {
         if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0)
         {
-            jumpCount = entityMovementData.AvailableJumps.getFinalValue();
+            jumpCount = entityBattleData.AvailableJumps.getFinalValue();
             isJumping = false;
         }
     }
@@ -93,7 +93,7 @@ public partial class player : characterEntity
 		*/
 		if (!IsOnFloor() && IsOnWall())
 		{
-			baseVelocity.X = GetWallNormal().X * entityMovementData.Speed.getFinalValue();
+			baseVelocity.X = GetWallNormal().X * entityBattleData.Speed.getFinalValue();
 			jumpCount++;
 		}
 		base.controlJumps();
