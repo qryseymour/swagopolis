@@ -1,12 +1,14 @@
 using Godot;
 using System;
 
-public partial class characterEntity : CharacterBody2D {
+public partial class characterEntity : CharacterBody2D, eventResponder {
     // Important Attributes
     [Export]
     public string realName = "Dummy";
 	[Export]
 	public entityBattleData entityBattleData;
+    public float currentHealth;
+    public float currentMana;
     public bool canJumpMidair = false;
 
 
@@ -44,9 +46,14 @@ public partial class characterEntity : CharacterBody2D {
         // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         // Signal Event Connections
+        eventSystem.Instance.Connect("PreDamageEvent", new Callable(this, nameof(preDamageEvent)));
+        eventSystem.Instance.Connect("PostDamageEvent", new Callable(this, nameof(postDamageEvent)));
         // Other stuff
 		cutJumpVelocity = entityBattleData.JumpVelocity + cutJumpFactor;
         startingPosition = GlobalPosition;
+        // 
+        currentHealth = entityBattleData.MaxHealth.getFinalValue();
+        currentMana = entityBattleData.MaxMana.getFinalValue();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -134,6 +141,7 @@ public partial class characterEntity : CharacterBody2D {
         }
     }
 
+
     protected virtual void controlJumps()
     {
         /* 
@@ -191,4 +199,44 @@ public partial class characterEntity : CharacterBody2D {
 			animatedSprite2D.Play("idle");
 		}
 	}
+
+    public void damage(float damage) {
+        eventSystem.Instance.EmitSignal("PreDamageEvent");
+        currentHealth =- damage;
+        eventSystem.Instance.EmitSignal("PostDamageEvent");
+    }
+
+    public virtual void preSpawnEvent() { }
+
+    public virtual void postSpawnEvent() { }
+
+    public virtual void preJumpEvent() { }
+
+    public virtual void postJumpEvent() { }
+
+    public virtual void preAbilityEvent() { }
+
+    public virtual void postAbilityEvent() { }
+
+    public virtual void groundedEvent() { }
+
+    public virtual void airborneEvent() { }
+
+    public virtual void preDamageEvent() { }
+
+    public virtual void postDamageEvent() { }
+
+    public virtual void preHealingEvent() { }
+
+    public virtual void postHealingEvent() { }
+
+    public virtual void preStatusEvent() { }
+
+    public virtual void postStatusEvent() { }
+
+    public virtual void preCollectibleEvent() { }
+
+    public virtual void postCollectibleEvent() { }
+
+    public virtual void levelCompleted() { }
 }

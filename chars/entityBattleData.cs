@@ -49,7 +49,9 @@ public partial class entityBattleData : Resource
     public attributeModifierPack ExtraProjectileSpeed = new attributeModifierPack(0);
     [Export]
     public attributeModifierPack ExtraExplosionSize = new attributeModifierPack(0);
-    public entityBattleData() : this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null) { }
+    public entityBattleData() : this(null, null, null, null, null, 
+    null, null, null, null, null, null, null, null, null, null, 
+    null, null, null, null, null) { }
     public entityBattleData(attributeModifierPack maxHealth, attributeModifierPack maxMana, 
     attributeModifierPack attackSpeed, attributeModifierPack defense, 
     attributeModifierPack speed, attributeModifierPack luck, 

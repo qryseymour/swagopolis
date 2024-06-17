@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class player : characterEntity
+public partial class player : characterEntity, eventResponder
 {
 	// Player variable shadowing
 	public player() {
@@ -115,4 +115,10 @@ public partial class player : characterEntity
 			}
 		}
 	}
+
+    public override void postDamageEvent()
+    {
+		GD.Print("Test 1");
+    }
+
 }

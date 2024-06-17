@@ -15,6 +15,8 @@ public partial class eventSystem : Node
 
         Instance = this;
 
+        AddUserSignal("PreDamageEvent");
+        AddUserSignal("PostDamageEvent");
         AddUserSignal("LevelCompleted");
         GD.Print("Signal created");
     }
