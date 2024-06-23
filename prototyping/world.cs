@@ -9,7 +9,13 @@ public partial class world : Node2D
 	public override void _Ready()
     {
 		RenderingServer.SetDefaultClearColor(Colors.Aqua);
-        eventSystem.Instance.Connect("LevelCompleted", new Callable(this, nameof(showLevelCompleted)));
+        eventSystem.levelCompletedEventChain += showLevelCompleted;
+    }
+
+    public override void _ExitTree()
+    {
+        eventSystem.levelCompletedEventChain -= showLevelCompleted;
+        base._ExitTree();
     }
 
     private void showLevelCompleted() {

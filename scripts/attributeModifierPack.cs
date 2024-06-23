@@ -95,14 +95,6 @@ public partial class attributeModifierPack : Resource
 
 
     // Operator Overloads
-    public static bool operator ==(attributeModifierPack left, attributeModifierPack right) {
-        return (left.Att_amount == right.Att_amount) && (left.Att_percentage == right.Att_percentage) && (left.Att_multiplier == right.Att_multiplier) && (left.Att_flatamount == right.Att_flatamount);
-    }
-
-    public static bool operator !=(attributeModifierPack left, attributeModifierPack right) {
-        return !(left == right);
-    }
-
     public static attributeModifierPack operator + (attributeModifierPack left, attributeModifierPack right) {
         return new attributeModifierPack(left.Att_amount + right.Att_amount, left.Att_percentage + right.Att_percentage, left.Att_multiplier * right.Att_multiplier, left.Att_flatamount + right.Att_flatamount);
     }

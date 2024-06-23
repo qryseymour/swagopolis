@@ -8,8 +8,8 @@ public interface eventResponder
     void postAbilityEvent();
     void groundedEvent();
     void airborneEvent();
-    void preDamageEvent();
-    void postDamageEvent();
+    void preDamageEvent(damageTicket dmgTicket);
+    void postDamageEvent(damageTicket dmgTicket);
     void preHealingEvent();
     void postHealingEvent();
     void preStatusEvent();

@@ -29,9 +29,9 @@ public partial class statusEffectTag : Node, eventResponder {
 
     public virtual void airborneEvent() { }
 
-    public virtual void preDamageEvent() { }
+    public virtual void preDamageEvent(damageTicket dmgTicket) { }
 
-    public virtual void postDamageEvent() { }
+    public virtual void postDamageEvent(damageTicket dmgTicket) { }
 
     public virtual void preHealingEvent() { }
 

@@ -46,8 +46,8 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         // Signal Event Connections
-        eventSystem.Instance.Connect("PreDamageEvent", new Callable(this, nameof(preDamageEvent)));
-        eventSystem.Instance.Connect("PostDamageEvent", new Callable(this, nameof(postDamageEvent)));
+        eventSystem.preDamageEventChain += preDamageEvent;
+        eventSystem.postDamageEventChain += postDamageEvent;
         // Other stuff
 		cutJumpVelocity = entityBattleData.JumpVelocity + cutJumpFactor;
         startingPosition = GlobalPosition;
@@ -67,6 +67,13 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         baseVelocity += additionalForces;
         Velocity = baseVelocity;
         MoveAndSlide();
+    }
+
+    public override void _ExitTree()
+    {
+        eventSystem.preDamageEventChain -= preDamageEvent;
+        eventSystem.postDamageEventChain -= postDamageEvent;
+        base._ExitTree();
     }
 
     protected virtual void controlCharacterPhysics(double delta)
@@ -200,10 +207,10 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 		}
 	}
 
-    public void damage(float damage) {
-        eventSystem.Instance.EmitSignal("PreDamageEvent");
-        currentHealth =- damage;
-        eventSystem.Instance.EmitSignal("PostDamageEvent");
+    public void damage(damageTicket damage) {
+        eventSystem.startPreDamageEvents(damage);
+        currentHealth =- damage.dmg_damageValue.getFinalValue();
+        eventSystem.startPostDamageEvents(damage);
     }
 
     public virtual void preSpawnEvent() { }
@@ -222,9 +229,9 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 
     public virtual void airborneEvent() { }
 
-    public virtual void preDamageEvent() { }
+    public virtual void preDamageEvent(damageTicket dmgTicket) { }
 
-    public virtual void postDamageEvent() { }
+    public virtual void postDamageEvent(damageTicket dmgTicket) { }
 
     public virtual void preHealingEvent() { }
 

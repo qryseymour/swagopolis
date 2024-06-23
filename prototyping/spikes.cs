@@ -7,7 +7,7 @@ public partial class spikes : Node2D
 		characterEntity entity = area2D.GetParent() as characterEntity;
 		if (entity != null) {
 			entity.GlobalPosition = entity.startingPosition;
-			entity.damage(5);
+			entity.damage(new damageTicket(5, entity, this));
 		}
 	}
 }

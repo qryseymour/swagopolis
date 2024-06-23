@@ -116,7 +116,7 @@ public partial class player : characterEntity, eventResponder
 		}
 	}
 
-    public override void postDamageEvent()
+    public override void postDamageEvent(damageTicket dmgTicket)
     {
 		GD.Print("Test 1");
     }
