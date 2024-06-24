@@ -1,5 +1,15 @@
 using Godot;
 
+/// <summary>
+/// Damage tickets are containers of information that are passed
+/// down during damage events. They can be defined either by
+/// an attribute modifier pack, or a float to then become a
+/// an attribute modifier pack. They take a Victim and Attacker
+/// as a Node, and if they're character entities, it's noted as
+/// a boolean (additionally, there should be no reason for a
+/// this to change midway through damage event processing, so
+/// they're fitted with private setters.)
+/// </summary> 
 public class damageTicket
 {
     public bool valid = true;
@@ -10,27 +20,23 @@ public class damageTicket
     public bool dmg_isAttackerCharacter { get; private set; } = false;
     public string dmg_ability;
     public ElementalTag dmg_elementalTag;
-    public damageTicket(attributeModifierPack damageValue = null, Node victim = null, Node attacker = null, ElementalTag elementalTag = ElementalTag.None, string ability = "") {
-        dmg_damageValue = damageValue != null ? damageValue : new attributeModifierPack(0);
+    // Rather than constantly evaluate if the victim or attacker
+    // is a characterEntity, that is remembered using booleans.
+    public damageTicket(Node victim, Node attacker, attributeModifierPack damageValue = null, ElementalTag elementalTag = ElementalTag.None, string ability = "") {
         dmg_victim = victim;
         dmg_attacker = attacker;
-        if (dmg_victim == null || dmg_attacker == null) {
-            valid = false;
-        } 
-        else 
-        {
-            if (dmg_victim is characterEntity) {
-                dmg_isVictimCharacter = true;
-            }
-            if (dmg_attacker is characterEntity) {
-                dmg_isAttackerCharacter = true;
-            }
-            dmg_ability = ability;
-            dmg_elementalTag = elementalTag;
+        if (dmg_victim is characterEntity) {
+            dmg_isVictimCharacter = true;
         }
+        if (dmg_attacker is characterEntity) {
+            dmg_isAttackerCharacter = true;
+        }
+        dmg_damageValue = damageValue is not null ? damageValue : new attributeModifierPack(0);
+        dmg_ability = ability;
+        dmg_elementalTag = elementalTag;
     }
 
-    public damageTicket(float damageValue, Node victim = null, Node attacker = null, ElementalTag elementalTag = ElementalTag.None, string ability = "") : this(new attributeModifierPack(damageValue), victim, attacker, elementalTag, ability) { }
+    public damageTicket(Node victim, Node attacker, float damageValue, ElementalTag elementalTag = ElementalTag.None, string ability = "") : this(victim, attacker, new attributeModifierPack(damageValue), elementalTag, ability) { }
 
     public void printDebugInfo() {
         GD.Print("Valid:            " + valid);

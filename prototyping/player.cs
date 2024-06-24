@@ -118,7 +118,7 @@ public partial class player : characterEntity, eventResponder
 
     public override void postDamageEvent(damageTicket dmgTicket)
     {
-		GD.Print("Test 1");
+		GD.Print("Current Health: " + currentHealth);
     }
 
 }

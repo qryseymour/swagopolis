@@ -1,3 +1,9 @@
+/// <summary>
+/// The Event Responder interface ensures that any class using
+/// it must implement every function within it. The particular
+/// functions here are related to the possible events the game
+/// should process.
+/// </summary> 
 public interface eventResponder
 {
     void preSpawnEvent();

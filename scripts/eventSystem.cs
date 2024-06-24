@@ -2,6 +2,13 @@ using Godot;
 using System;
 public delegate void damageProcessor(damageTicket dmgTicket);
 public delegate void levelEndProcessor();
+/// <summary>
+/// The Event System is the autoloaded node that holds and processes 
+/// all associated events when they are invoked. There should
+/// only ever be one instance of an EventSystem, thus a static
+/// variable exists to hold itself and detect if one already
+/// exists or not.
+/// </summary> 
 public partial class eventSystem : Node
 {	
 	// Credits: https://github.com/godotengine/godot/issues/82268

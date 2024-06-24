@@ -1,6 +1,10 @@
 using Godot;
 using System;
-
+/// <summary>
+/// Entity Battle Data - as it says on the tin - is the storage
+/// of different attribute modifier packs representing the entity's
+/// stats, things such as Health, Attack, and Defense.
+/// </summary> 
 [GlobalClass]
 public partial class entityBattleData : Resource
 {

@@ -45,6 +45,10 @@ public class forceDictionary
     }
 
     public Vector2 extractAllForces() {
+        /*
+            Same as extractAllForcesPerFrame(), but doesn't 
+            subtract a frame during evaluation.
+        */
         Vector2 velocity = new Vector2();
         foreach(KeyValuePair<string, isolatedVelocity> entry in forceDic_forces)
         {
@@ -58,6 +62,11 @@ public class forceDictionary
     }
 
     public bool addVelocity(string str, isolatedVelocity isoVelocity) {
+        /*
+            Adds the velocity to the force dictionary if the
+            an object with the same key doesn't exist. Otherwise,
+            this does nothing.
+        */
         bool addedVelocity = false;
         if (!forceDic_forces.ContainsKey(str)) {
             forceDic_forces.Add(str, new isolatedVelocity(isoVelocity));
@@ -67,6 +76,11 @@ public class forceDictionary
     }
 
     public bool modifyVelocity(string str, isolatedVelocity isoVelocity) {
+        /*
+            Modifiers the velocity to the force dictionary if the
+            an object with the same key does exist. Otherwise,
+            this does nothing.
+        */
         bool modifiedVelocity = false;
         if (forceDic_forces.ContainsKey(str)) {
             forceDic_forces[str] = new isolatedVelocity(isoVelocity);
@@ -84,6 +98,11 @@ public class forceDictionary
     }
 
     public bool removeVelocity(string str) {
+        /*
+            Removes the velocity to the force dictionary if the
+            an object with the same key does exist. Otherwise,
+            this does nothing.
+        */
         bool removedVelocity = false;
         if (forceDic_forces.ContainsKey(str)) {
             forceDic_forces.Remove(str);

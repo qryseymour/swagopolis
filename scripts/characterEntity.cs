@@ -1,6 +1,14 @@
 using Godot;
 using System;
 
+/// <summary>
+/// Character Entities are extensions of the CharacterBody2D
+/// node that have the added data of entity stats. By default,
+/// they also come with implements for basic movement, such as
+/// movement, acceleration, friction, and jumping. They should
+/// be used when any Node should process additional effects,
+/// even for non-living objects like hazards or boxes.
+/// </summary> 
 public partial class characterEntity : CharacterBody2D, eventResponder {
     // Important Attributes
     [Export]
@@ -54,6 +62,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         // 
         currentHealth = entityBattleData.MaxHealth.getFinalValue();
         currentMana = entityBattleData.MaxMana.getFinalValue();
+        GD.Print(currentHealth);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -187,6 +196,11 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 	}
 
 	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
+        /* 
+            Acceleration cannot occur if there is no specified 
+            direction. No exception should be thrown for the
+            case to avoid being an annoying prick.
+        */ 
 		if (movementDirection != 0) { 
 			baseVelocity.X = Mathf.MoveToward(baseVelocity.X, movementDirection * speedPow, 
 			accelerationPow * 60 * (float)delta);
@@ -199,6 +213,10 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 	}
 
 	protected virtual void updateAnimations() {
+        /* 
+            If-else blocks to define what animation should be 
+            playing. 
+        */
 		if (horizontalMovement != 0) {
 			animatedSprite2D.Play("run");
 			animatedSprite2D.FlipH = horizontalMovement < 0;
@@ -206,13 +224,31 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 			animatedSprite2D.Play("idle");
 		}
 	}
-
-    public void damage(damageTicket damage) {
-        eventSystem.startPreDamageEvents(damage);
-        currentHealth =- damage.dmg_damageValue.getFinalValue();
-        eventSystem.startPostDamageEvents(damage);
+    public void dealDamage(characterEntity entity, damageTicket damage) {
+        damage.dmg_damageValue = damage.dmg_damageValue + entityBattleData.ExtraDamageDealt;
+        entity.takeDamage(damage);
     }
 
+    public void takeDamage(damageTicket damage) {
+        /*
+            The order of operations for taking damage is
+            this: damage is first multiplied by the extra
+            damage received modifier, then the pre-damage
+            events are processed. If the ticket is valid
+            after those events, health is then subtracted
+            by the damage number, and the post-damage events
+            are processed. Validity should not be checked
+            in the post-damage events.
+        */
+        damage.dmg_damageValue = damage.dmg_damageValue + entityBattleData.ExtraDamageReceived;
+        eventSystem.startPreDamageEvents(damage);
+        if (damage.valid) {
+            currentHealth -= damage.dmg_damageValue.getFinalValue();
+            eventSystem.startPostDamageEvents(damage);
+        }
+    }
+
+    // Empty interface methods
     public virtual void preSpawnEvent() { }
 
     public virtual void postSpawnEvent() { }

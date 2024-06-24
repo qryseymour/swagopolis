@@ -4,7 +4,7 @@ using System;
 /// <summary>
 /// Isolated Velocities are independant velocities that hold
 /// the frames they last, or if the force they are applying is
-/// infinite.
+/// infinite. Good for things like knockback or constant forces.
 /// </summary> 
 public class isolatedVelocity
 {
