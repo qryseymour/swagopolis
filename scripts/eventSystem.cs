@@ -1,6 +1,7 @@
 using Godot;
 using System;
 public delegate void damageProcessor(damageTicket dmgTicket);
+public delegate void statusProcessor(statusTicket stsTicket);
 public delegate void levelEndProcessor();
 /// <summary>
 /// The Event System is the autoloaded node that holds and processes 
@@ -30,6 +31,14 @@ public partial class eventSystem : Node
     public static event damageProcessor postDamageEventChain;
     public static void startPostDamageEvents(damageTicket dmgTicket) {
         postDamageEventChain?.Invoke(dmgTicket);
+    }
+    public static event statusProcessor preStatusEventChain;
+    public static void startPreStatusEvents(statusTicket stusTicket) {
+        preStatusEventChain?.Invoke(stusTicket);
+    }
+    public static event statusProcessor postStatusEventChain;
+    public static void startPostStatusEvents(statusTicket stusTicket) {
+        postStatusEventChain?.Invoke(stusTicket);
     }
     public static event levelEndProcessor levelCompletedEventChain;
     public static void startLevelCompletedEvents() {

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class player : characterEntity, eventResponder
 {
@@ -8,6 +9,8 @@ public partial class player : characterEntity, eventResponder
 		canJumpMidair = true;
 	}
 
+	// Important Attributes
+	public attributeModifierPack InvulnerbilityFrames = new attributeModifierPack(3);
 
 
 	// Non-Important Attributes
@@ -17,20 +20,32 @@ public partial class player : characterEntity, eventResponder
 
 
 	// Fundamental Variables
+    public List<String> durationTimers = new List<String>();
 	protected bool justFacedRight = true;
+
+
+
+    // Node references
 	public Timer coyoteJumpTimer = null;
+	public Timer blinkTimer = null;
 
 	public override void _Ready()
 	{
 		// Basic code to override ready with the base class implementation, followed by additional code.
 		base._Ready();
 		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
+		blinkTimer = GetNode<Timer>("BlinkTimer");
 		/* 
 			When the coyote jump timer expires, if the entity is
 			unable to jump midair, is not jumping, and not on the
 			floor (doing the dinosaur) (doing ur mom), then the
 			entity loses one possible jump they can make.
 		*/
+        eventSystem.postDamageEventChain += postDamageEvent;
+		blinkTimer.Timeout += () => {
+			animatedSprite2D.Visible = !animatedSprite2D.Visible;
+		};
+		
 		coyoteJumpTimer.Timeout += () =>
 		{
 			if (!canJumpMidair && !isJumping && !IsOnFloor())
@@ -39,6 +54,12 @@ public partial class player : characterEntity, eventResponder
 			}
 		};
 	}
+
+    public override void _ExitTree()
+    {
+        eventSystem.postDamageEventChain -= postDamageEvent;
+        base._ExitTree();
+    }
 
     protected override void controlCharacterPhysics(double delta)
     {
@@ -99,6 +120,20 @@ public partial class player : characterEntity, eventResponder
 		base.controlJumps();
     }
 
+    public override void processDamage(damageTicket damage) {
+		if (!durationTimers.Contains(damage.dmg_invulnerLayer)) {
+			durationTimer durTimer = new durationTimer();
+			AddChild(durTimer);
+			durTimer.WaitTime = damage.dmg_invulnerFrames;
+			durTimer.OneShot = true;
+			durTimer.Name = damage.dmg_invulnerLayer;
+			durationTimers.Add(durTimer.Name);
+			durTimer.Start();
+			blinkTimer.Start();
+			base.processDamage(damage);
+		}
+    }
+
 	protected void bicycle() {
 		/*
 			Bicycling is a form of intentional movement designed
@@ -113,6 +148,13 @@ public partial class player : characterEntity, eventResponder
 			if (baseVelocity.Y > 0) {
 				baseVelocity.Y /= bicycleFactor;
 			}
+		}
+	}
+
+	public void removeDurTimerAtLayer(String layer) {
+		durationTimers.Remove(layer);
+		if (durationTimers.Count <= 0) {
+			blinkTimer.Stop();
 		}
 	}
 

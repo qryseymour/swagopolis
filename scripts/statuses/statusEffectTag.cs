@@ -7,10 +7,21 @@ public partial class statusEffectTag : Node, eventResponder {
 
     public override void _Ready()
     {
+        setParentAsNewOwner();
+        if (isCharacterEntity) {
+            onStart();
+        }
+    }
+
+    public void setParentAsNewOwner() {
         owner = GetParent();
         if (GetParent() is characterEntity) {
             isCharacterEntity = true;
         }
+    }
+
+    public virtual void onStart() {
+        
     }
 
     public virtual void preSpawnEvent() { }
@@ -37,9 +48,9 @@ public partial class statusEffectTag : Node, eventResponder {
 
     public virtual void postHealingEvent() { }
 
-    public virtual void preStatusEvent() { }
+    public virtual void preStatusEvent(statusTicket stsTicket) { }
 
-    public virtual void postStatusEvent() { }
+    public virtual void postStatusEvent(statusTicket stsTicket) { }
 
     public virtual void preCollectibleEvent() { }
 

@@ -53,9 +53,8 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         entityBattleData = (entityBattleData)entityBattleData.Duplicate(true);
         // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-        // Signal Event Connections
-        eventSystem.preDamageEventChain += preDamageEvent;
-        eventSystem.postDamageEventChain += postDamageEvent;
+        // Signal Event Connections (Likely to be deleted)
+
         // Other stuff
 		cutJumpVelocity = entityBattleData.JumpVelocity + cutJumpFactor;
         startingPosition = GlobalPosition;
@@ -76,13 +75,6 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         baseVelocity += additionalForces;
         Velocity = baseVelocity;
         MoveAndSlide();
-    }
-
-    public override void _ExitTree()
-    {
-        eventSystem.preDamageEventChain -= preDamageEvent;
-        eventSystem.postDamageEventChain -= postDamageEvent;
-        base._ExitTree();
     }
 
     protected virtual void controlCharacterPhysics(double delta)
@@ -229,7 +221,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         entity.takeDamage(damage);
     }
 
-    public void takeDamage(damageTicket damage) {
+    public virtual void takeDamage(damageTicket damage) {
         /*
             The order of operations for taking damage is
             this: damage is first multiplied by the extra
@@ -242,10 +234,16 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         */
         damage.dmg_damageValue = damage.dmg_damageValue + entityBattleData.ExtraDamageReceived;
         eventSystem.startPreDamageEvents(damage);
-        if (damage.valid) {
-            currentHealth -= damage.dmg_damageValue.getFinalValue();
-            eventSystem.startPostDamageEvents(damage);
+        if (damage.valid)
+        {
+            processDamage(damage);
         }
+    }
+
+    public virtual void processDamage(damageTicket damage)
+    {
+        currentHealth -= damage.dmg_damageValue.getFinalValue();
+        eventSystem.startPostDamageEvents(damage);
     }
 
     // Empty interface methods
@@ -273,9 +271,9 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 
     public virtual void postHealingEvent() { }
 
-    public virtual void preStatusEvent() { }
+    public virtual void preStatusEvent(statusTicket stsTicket) { }
 
-    public virtual void postStatusEvent() { }
+    public virtual void postStatusEvent(statusTicket stsTicket) { }
 
     public virtual void preCollectibleEvent() { }
 

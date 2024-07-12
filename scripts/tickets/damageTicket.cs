@@ -20,9 +20,11 @@ public class damageTicket
     public bool dmg_isAttackerCharacter { get; private set; } = false;
     public string dmg_ability;
     public ElementalTag dmg_elementalTag;
+    public float dmg_invulnerFrames;
+    public string dmg_invulnerLayer;
     // Rather than constantly evaluate if the victim or attacker
     // is a characterEntity, that is remembered using booleans.
-    public damageTicket(Node victim, Node attacker, attributeModifierPack damageValue = null, ElementalTag elementalTag = ElementalTag.None, string ability = "") {
+    public damageTicket(Node victim, Node attacker, attributeModifierPack damageValue = null, ElementalTag elementalTag = ElementalTag.None, string ability = "", float invulnerFrames = 0.5f, string invulnerLayer = "0") {
         dmg_victim = victim;
         dmg_attacker = attacker;
         if (dmg_victim is characterEntity) {
@@ -34,9 +36,11 @@ public class damageTicket
         dmg_damageValue = damageValue is not null ? damageValue : new attributeModifierPack(0);
         dmg_ability = ability;
         dmg_elementalTag = elementalTag;
+        dmg_invulnerFrames = invulnerFrames;
+        dmg_invulnerLayer = invulnerLayer;
     }
 
-    public damageTicket(Node victim, Node attacker, float damageValue, ElementalTag elementalTag = ElementalTag.None, string ability = "") : this(victim, attacker, new attributeModifierPack(damageValue), elementalTag, ability) { }
+    public damageTicket(Node victim, Node attacker, float damageValue, ElementalTag elementalTag = ElementalTag.None, string ability = "", float invulnerFrames = 0.5f, string invulnerLayer = "0") : this(victim, attacker, new attributeModifierPack(damageValue), elementalTag, ability, invulnerFrames, invulnerLayer) { }
 
     public void printDebugInfo() {
         GD.Print("Valid:            " + valid);
@@ -45,6 +49,7 @@ public class damageTicket
         GD.Print("Attacker ("  + (dmg_isAttackerCharacter ? "T" : "F") + "):     " + dmg_attacker.Name);
         GD.Print("Elemental Tags:   " + dmg_elementalTag);
         GD.Print("Ability:          " + dmg_ability);
+        GD.Print("InvulnerLayer:    " + dmg_invulnerLayer);
     }
 
     public static explicit operator bool(damageTicket dmg) {

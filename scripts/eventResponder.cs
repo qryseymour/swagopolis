@@ -18,8 +18,8 @@ public interface eventResponder
     void postDamageEvent(damageTicket dmgTicket);
     void preHealingEvent();
     void postHealingEvent();
-    void preStatusEvent();
-    void postStatusEvent();
+    void preStatusEvent(statusTicket stsTicket);
+    void postStatusEvent(statusTicket stsTicket);
     void preCollectibleEvent();
     void postCollectibleEvent();
     void levelCompleted();

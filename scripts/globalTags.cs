@@ -74,8 +74,8 @@ public enum WeaponTag: int {
     Ranged = Bow | AssaultRifle | LMG | Shotgun | Sniper | Akimbo | Minigun | Flamethrower | Pistol | SMG | SingleShot | RocketLauncher | GrenadeLauncher | LaserGun,
     Magical = Wand | Spellbook | Magic,
     Rogue = Consumable | Bomb | Hazard,
-    Rogue2 = Rogue | ThrowingMelee | Boomerang,
-    Classed = Melee & Ranged & Magical & Rogue
+    RoguePlus = Rogue | ThrowingMelee | Boomerang,
+    Classed = Melee | Ranged | Magical | Rogue
 }
 
 public enum FoodTags: int {
