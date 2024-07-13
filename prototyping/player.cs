@@ -20,7 +20,7 @@ public partial class player : characterEntity, eventResponder
 
 
 	// Fundamental Variables
-    public List<String> durationTimers = new List<String>();
+    public List<String> invulnerDurationTimers = new List<String>();
 	protected bool justFacedRight = true;
 
 
@@ -70,6 +70,10 @@ public partial class player : characterEntity, eventResponder
 
     protected override void handleGravity(double delta)
     {
+		/*
+			The player has a choice whilst falling to hold the
+			down button and increase their descent downwards.
+		*/
         if (Input.IsActionPressed("ui_down"))
         {
             applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue() * additionalGravityFactor);
@@ -81,6 +85,8 @@ public partial class player : characterEntity, eventResponder
     }
 	protected override void restoreJumps()
     {
+		// This override of restoreJumps() now also accounts
+		// for the coyoteJumpTimer for the restoration.
         if (IsOnFloor() || coyoteJumpTimer.TimeLeft > 0)
         {
             jumpCount = entityBattleData.AvailableJumps.getFinalValue();
@@ -121,13 +127,23 @@ public partial class player : characterEntity, eventResponder
     }
 
     public override void processDamage(damageTicket damage) {
-		if (!durationTimers.Contains(damage.dmg_invulnerLayer)) {
-			durationTimer durTimer = new durationTimer();
+		/* 
+			For player characters, when they process damage after
+			the pre-damage events, there is check on whether a
+			state of invulnerability is active on the damage
+			ticket's layer. If there isn't, the player creates
+			a new timer representing this invulnerability,
+			which then has it's properties/attributes modified,
+			(using a packedscene is not that necessary just
+			for setting the oneshot variable to be true.)
+		*/
+		if (!invulnerDurationTimers.Contains("idt-" + damage.dmg_invulnerLayer)) {
+			invulnerDurationTimer durTimer = new invulnerDurationTimer();
 			AddChild(durTimer);
 			durTimer.WaitTime = damage.dmg_invulnerFrames;
 			durTimer.OneShot = true;
-			durTimer.Name = damage.dmg_invulnerLayer;
-			durationTimers.Add(durTimer.Name);
+			durTimer.Name = "idt-" + damage.dmg_invulnerLayer;
+			invulnerDurationTimers.Add(durTimer.Name);
 			durTimer.Start();
 			blinkTimer.Start();
 			base.processDamage(damage);
@@ -151,15 +167,31 @@ public partial class player : characterEntity, eventResponder
 		}
 	}
 
-	public void removeDurTimerAtLayer(String layer) {
-		durationTimers.Remove(layer);
-		if (durationTimers.Count <= 0) {
+	public void removeInvulnerDurationTimerAtLayer(String layer) {
+		/* 
+			Removes an invulnerDurationTimer at the specified
+			layer by first removing the string that tracks it's
+			existance from the list (it's datatype must be a 
+			string in order to compare it with the layer the damage
+			ticket is referring to), then it tries to remove it
+			should it be found. After all of this, if there are
+			no more invulnerDurationTimers, the blinking timer
+			stops, indicating there are no more active invulnerability
+			frames.
+		*/
+		invulnerDurationTimers.Remove(layer);
+		invulnerDurationTimer idt = GetNode<invulnerDurationTimer>(layer);
+		if (idt != null) {
+			idt.QueueFree();
+		}
+		if (invulnerDurationTimers.Count <= 0) {
 			blinkTimer.Stop();
 		}
 	}
 
     public override void postDamageEvent(damageTicket dmgTicket)
     {
+		// Placeholder for debugging purposes
 		GD.Print("Current Health: " + currentHealth);
     }
 
