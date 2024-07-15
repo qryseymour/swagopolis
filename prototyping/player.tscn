@@ -74,11 +74,19 @@ frame_progress = 0.0015374
 wait_time = 0.1
 one_shot = true
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="HitboxCollision" type="Area2D" parent="."]
+collision_layer = 129
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxCollision"]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_bjtwd")
+
+[node name="BaseCollision" type="Area2D" parent="."]
 collision_layer = 3
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BaseCollision"]
 position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_bjtwd")
 

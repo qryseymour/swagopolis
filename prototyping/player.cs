@@ -15,6 +15,7 @@ public partial class player : characterEntity, eventResponder
 
 	// Non-Important Attributes
 	public float additionalGravityFactor = 2;
+	public float wallSlidingGravityFactor = 0.5f;
 	public float bicycleFactor = 5;
 
 
@@ -22,12 +23,16 @@ public partial class player : characterEntity, eventResponder
 	// Fundamental Variables
     public List<String> invulnerDurationTimers = new List<String>();
 	protected bool justFacedRight = true;
+	public bool isWallSliding = false;
+	public bool justOnWall = false;
 
 
 
     // Node references
 	public Timer coyoteJumpTimer = null;
 	public Timer blinkTimer = null;
+	public Area2D hitboxCollision = null;
+	public CollisionShape2D hitboxCollisionShape2D = null;
 
 	public override void _Ready()
 	{
@@ -35,6 +40,8 @@ public partial class player : characterEntity, eventResponder
 		base._Ready();
 		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
 		blinkTimer = GetNode<Timer>("BlinkTimer");
+		hitboxCollision = GetNode<Area2D>("HitboxCollision");
+		hitboxCollisionShape2D = hitboxCollision.GetNode<CollisionShape2D>("CollisionShape2D");
 		/* 
 			When the coyote jump timer expires, if the entity is
 			unable to jump midair, is not jumping, and not on the
@@ -74,14 +81,19 @@ public partial class player : characterEntity, eventResponder
 			The player has a choice whilst falling to hold the
 			down button and increase their descent downwards.
 		*/
+		isWallSliding = (!justOnWall || isWallSliding || Velocity.Y > 0) && !IsOnFloor() && IsOnWall() && (Input.IsActionPressed("ui_right") || Input.IsActionPressed("ui_left"));
+		justOnWall = IsOnWall();
+		float gravity = entityBattleData.GravityVelocity.getFinalValue();
         if (Input.IsActionPressed("ui_down"))
         {
-            applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue() * additionalGravityFactor);
+			gravity *= additionalGravityFactor;
         }
-        else
+        if (isWallSliding)
         {
-            applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue());
+			gravity *= wallSlidingGravityFactor;
+			GD.Print("isWallSliding");
         }
+		applyGravity(delta, gravity);
     }
 	protected override void restoreJumps()
     {
@@ -109,7 +121,7 @@ public partial class player : characterEntity, eventResponder
 		wasOnFloor = IsOnFloor();
 	}
 
-	protected override void controlJumps()
+	protected override void applyJump()
     {
 		/*
 			This is the implementation for wall-jumps; When
@@ -118,15 +130,24 @@ public partial class player : characterEntity, eventResponder
 			the jump count, before it then processes a regular
 			jump. This... may be clever?
 		*/
-		if (!IsOnFloor() && IsOnWall())
+		if (isWallSliding)
 		{
 			baseVelocity.X = GetWallNormal().X * entityBattleData.Speed.getFinalValue();
 			jumpCount++;
 		}
-		base.controlJumps();
+		base.applyJump();
     }
 
     public override void processDamage(damageTicket damage) {
+		if (!invulnerDurationTimers.Contains("idt-" + damage.dmg_invulnerLayer))
+        {
+			createInvulnerDurationTimerAtLayer(damage.dmg_invulnerFrames, damage.dmg_invulnerLayer);
+            base.processDamage(damage);
+        }
+    }
+
+    private void createInvulnerDurationTimerAtLayer(float frames, string name)
+    {
 		/* 
 			For player characters, when they process damage after
 			the pre-damage events, there is check on whether a
@@ -137,20 +158,18 @@ public partial class player : characterEntity, eventResponder
 			(using a packedscene is not that necessary just
 			for setting the oneshot variable to be true.)
 		*/
-		if (!invulnerDurationTimers.Contains("idt-" + damage.dmg_invulnerLayer)) {
-			invulnerDurationTimer durTimer = new invulnerDurationTimer();
-			AddChild(durTimer);
-			durTimer.WaitTime = damage.dmg_invulnerFrames;
-			durTimer.OneShot = true;
-			durTimer.Name = "idt-" + damage.dmg_invulnerLayer;
-			invulnerDurationTimers.Add(durTimer.Name);
-			durTimer.Start();
-			blinkTimer.Start();
-			base.processDamage(damage);
-		}
+        invulnerDurationTimer durTimer = new invulnerDurationTimer();
+        AddChild(durTimer);
+        durTimer.WaitTime = frames;
+        durTimer.OneShot = true;
+        durTimer.Name = "idt-" + name;
+        invulnerDurationTimers.Add(durTimer.Name);
+        durTimer.Start();
+        blinkTimer.Start();
+        hitboxCollisionShape2D.SetDeferred("disabled", true);
     }
 
-	protected void bicycle() {
+    protected void bicycle() {
 		/*
 			Bicycling is a form of intentional movement designed
 			to prolong the player's stupid and sad little existance.
@@ -186,6 +205,7 @@ public partial class player : characterEntity, eventResponder
 		}
 		if (invulnerDurationTimers.Count <= 0) {
 			blinkTimer.Stop();
+			hitboxCollisionShape2D.SetDeferred("disabled", false);
 		}
 	}
 

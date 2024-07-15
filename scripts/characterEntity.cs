@@ -68,9 +68,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
     {
         baseVelocity = Velocity - additionalForces;
         controlCharacterPhysics(delta);
-        if (Input.IsKeyPressed(Key.W)) {
-            appliedExternalForces.addVelocity(realName, testVelocity);
-        }
+        updateAnimations();
         additionalForces = appliedExternalForces.extractAllForcesPerFrame() * (float)delta;
         baseVelocity += additionalForces;
         Velocity = baseVelocity;
@@ -79,31 +77,29 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 
     protected virtual void controlCharacterPhysics(double delta)
     {
-        handleGravity(delta);
-        handleHorizontalDirection();
-        applyAcceleration(delta, horizontalMovement, entityBattleData.Speed.getFinalValue(), entityBattleData.Acceleration.getFinalValue());
-        if (horizontalMovement == 0)
-        {
-            applyFriction(delta, entityBattleData.Speed.getFinalValue(), entityBattleData.Friction.getFinalValue());
-        }
-		/*
+        handleHorizontalMovement(delta);
+        /*
 			This line acts as a divider between all internal
 			factions that modify just X (as above), and can
 			modify X AND Y (as below). This avoids any conflicts
 			with having set velocities overriding one another.
 			Although better coding practices can resolve this.
 		*/
-        restoreJumps();
-        handleJump();
-        updateAnimations();
+        handleGravity(delta);
+        handleJumping();
     }
 
-    protected virtual void handleGravity(double delta)
+    private void handleHorizontalMovement(double delta)
     {
-        applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue());
+        detectHorizontalDirection();
+        applyAcceleration(delta, horizontalMovement, entityBattleData.Speed.getFinalValue(), entityBattleData.Acceleration.getFinalValue());
+        if (horizontalMovement == 0)
+        {
+            applyFriction(delta, entityBattleData.Speed.getFinalValue(), entityBattleData.Friction.getFinalValue());
+        }
     }
 
-    protected virtual void handleHorizontalDirection()
+    protected virtual void detectHorizontalDirection()
     {
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
@@ -125,6 +121,28 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         }
     }
 
+	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
+        /* 
+            Acceleration cannot occur if there is no specified 
+            direction. No exception should be thrown for the
+            case to avoid being an annoying prick.
+        */ 
+		if (movementDirection != 0) { 
+			baseVelocity.X = Mathf.MoveToward(baseVelocity.X, movementDirection * speedPow, 
+			accelerationPow * 60 * (float)delta);
+		} 
+	}
+
+	public virtual void applyFriction(double delta, float speedPow = 100, float frictionPow = 100) {
+		baseVelocity.X = Mathf.MoveToward(baseVelocity.X, 0, 
+		frictionPow * 60 * (float)delta);
+	}
+
+    protected virtual void handleGravity(double delta)
+    {
+        applyGravity(delta, entityBattleData.GravityVelocity.getFinalValue());
+    }
+
     public virtual void applyGravity(double delta, float gravityPow = 98) {
 		// Add the gravity if not on the floor.
 		if (!IsOnFloor()) {
@@ -132,12 +150,26 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 		}
 	}
 
-	protected virtual void handleJump()
+    protected virtual void restoreJumps()
     {
+        /*
+            If the player is on the floor, they are no longer
+            considered jumping and they restore their jump count.
+        */
+        if (IsOnFloor())
+        {
+            jumpCount = entityBattleData.AvailableJumps.getFinalValue();
+            isJumping = false;
+        }
+    }
+
+	protected virtual void handleJumping()
+    {
+        restoreJumps();
         // Handles Jumping, and the change in velocity when letting go of jump.
         if (Input.IsActionJustPressed("ui_accept"))
         {
-            controlJumps();
+            applyJump();
         }
         if (!IsOnFloor())
         {
@@ -149,8 +181,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         }
     }
 
-
-    protected virtual void controlJumps()
+    protected virtual void applyJump()
     {
         /* 
             If the player has less than 1 possible jump stored,
@@ -169,39 +200,10 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         }
     }
 
-    protected virtual void restoreJumps()
-    {
-        /*
-            If the player is on the floor, they are no longer
-            considered jumping and they restore their jump count.
-        */
-        if (IsOnFloor())
-        {
-            jumpCount = entityBattleData.AvailableJumps.getFinalValue();
-            isJumping = false;
-        }
-    }
 
     public virtual void applyJump(float jumpPow = -300) {
 		baseVelocity.Y = jumpPow;
         isJumping = true;
-	}
-
-	public virtual void applyAcceleration(double delta, int movementDirection, float speedPow = 100, float accelerationPow = 100) {
-        /* 
-            Acceleration cannot occur if there is no specified 
-            direction. No exception should be thrown for the
-            case to avoid being an annoying prick.
-        */ 
-		if (movementDirection != 0) { 
-			baseVelocity.X = Mathf.MoveToward(baseVelocity.X, movementDirection * speedPow, 
-			accelerationPow * 60 * (float)delta);
-		} 
-	}
-
-	public virtual void applyFriction(double delta, float speedPow = 100, float frictionPow = 100) {
-		baseVelocity.X = Mathf.MoveToward(baseVelocity.X, 0, 
-		frictionPow * 60 * (float)delta);
 	}
 
 	protected virtual void updateAnimations() {

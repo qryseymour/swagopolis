@@ -45,6 +45,7 @@ version_control/autoload_on_startup=true
 2d_physics/layer_5="SpriteOnlyGeometry"
 2d_physics/layer_6="ProjectileOnlyGeometry"
 2d_physics/layer_7="InteractableGeometry"
+2d_physics/layer_8="NegativeHitbox"
 
 [rendering]
 
