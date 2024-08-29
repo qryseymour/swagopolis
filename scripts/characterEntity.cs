@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections;
 
 /// <summary>
 /// Character Entities are extensions of the CharacterBody2D
@@ -33,6 +34,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
     private Vector2 additionalForces;
     public int horizontalMovement = 0;
 	protected int startedHoldingRight = 0;
+	protected bool isFacingRight = true;
 	public bool isJumping = false;
 	protected bool wasOnFloor = false;
 	protected bool justLeftLedge = false;
@@ -61,7 +63,6 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         // 
         currentHealth = entityBattleData.MaxHealth.getFinalValue();
         currentMana = entityBattleData.MaxMana.getFinalValue();
-        GD.Print(currentHealth);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -87,9 +88,12 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 		*/
         handleGravity(delta);
         handleJumping();
+        if (detectTurn()) {
+            doATurn();
+        }
     }
 
-    private void handleHorizontalMovement(double delta)
+    protected virtual void handleHorizontalMovement(double delta)
     {
         detectHorizontalDirection();
         applyAcceleration(delta, horizontalMovement, entityBattleData.Speed.getFinalValue(), entityBattleData.Acceleration.getFinalValue());
@@ -169,7 +173,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         // Handles Jumping, and the change in velocity when letting go of jump.
         if (Input.IsActionJustPressed("ui_accept"))
         {
-            applyJump();
+            handleJump();
         }
         if (!IsOnFloor())
         {
@@ -181,7 +185,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         }
     }
 
-    protected virtual void applyJump()
+    protected virtual void handleJump()
     {
         /* 
             If the player has less than 1 possible jump stored,
@@ -206,6 +210,33 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         isJumping = true;
 	}
 
+    protected virtual bool detectTurn() {
+        bool result = false;
+		if (isFacingRight && horizontalMovement < 0 || !isFacingRight && horizontalMovement > 0) {
+            result = true;
+		}
+        return result;
+    }
+
+    protected virtual void doATurn(Direction dir = 0) {
+        if (dir is Direction.Left) {
+            isFacingRight = false;
+            if (Scale.X > 0)
+            {
+                Scale = new Vector2(Scale.X * -1, Scale.Y);
+            }
+        } else if (dir is Direction.Right) {
+            isFacingRight = true;
+            if (Scale.X < 0)
+            {
+                Scale = new Vector2(Scale.X * -1, Scale.Y);
+            }
+        } else {
+		    isFacingRight = !isFacingRight;
+            Scale = new Vector2(Scale.X * -1, Scale.Y);
+        }
+    }
+
 	protected virtual void updateAnimations() {
         /* 
             If-else blocks to define what animation should be 
@@ -213,7 +244,6 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         */
 		if (horizontalMovement != 0) {
 			animatedSprite2D.Play("run");
-			animatedSprite2D.FlipH = horizontalMovement < 0;
 		} else {
 			animatedSprite2D.Play("idle");
 		}

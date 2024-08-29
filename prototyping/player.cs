@@ -15,22 +15,23 @@ public partial class player : characterEntity, eventResponder
 
 	// Non-Important Attributes
 	public float additionalGravityFactor = 2;
-	public float wallSlidingGravityFactor = 0.5f;
+	public float wallSlidingGravityFactor = 0.33f;
 	public float bicycleFactor = 5;
 
 
 
 	// Fundamental Variables
     public List<String> invulnerDurationTimers = new List<String>();
-	protected bool justFacedRight = true;
 	public bool isWallSliding = false;
 	public bool justOnWall = false;
+	public char disabledHorizontal = ' ';
 
 
 
     // Node references
 	public Timer coyoteJumpTimer = null;
 	public Timer blinkTimer = null;
+	public Timer disabledHorizontalTimer;
 	public Area2D hitboxCollision = null;
 	public CollisionShape2D hitboxCollisionShape2D = null;
 
@@ -40,25 +41,32 @@ public partial class player : characterEntity, eventResponder
 		base._Ready();
 		coyoteJumpTimer = GetNode<Timer>("CoyoteJumpTimer");
 		blinkTimer = GetNode<Timer>("BlinkTimer");
+		disabledHorizontalTimer = GetNode<Timer>("DisabledHorizontalTimer");
 		hitboxCollision = GetNode<Area2D>("HitboxCollision");
 		hitboxCollisionShape2D = hitboxCollision.GetNode<CollisionShape2D>("CollisionShape2D");
+
+
+        eventSystem.postDamageEventChain += postDamageEvent;
+		blinkTimer.Timeout += () => {
+			animatedSprite2D.Visible = !animatedSprite2D.Visible;
+		};
+		
 		/* 
 			When the coyote jump timer expires, if the entity is
 			unable to jump midair, is not jumping, and not on the
 			floor (doing the dinosaur) (doing ur mom), then the
 			entity loses one possible jump they can make.
 		*/
-        eventSystem.postDamageEventChain += postDamageEvent;
-		blinkTimer.Timeout += () => {
-			animatedSprite2D.Visible = !animatedSprite2D.Visible;
-		};
-		
 		coyoteJumpTimer.Timeout += () =>
 		{
 			if (!canJumpMidair && !isJumping && !IsOnFloor())
 			{
 				jumpCount = jumpCount < 1 ? 0 : jumpCount - 1;
 			}
+		};
+
+		disabledHorizontalTimer.Timeout += () => {
+			disabledHorizontal = ' ';
 		};
 	}
 
@@ -72,30 +80,42 @@ public partial class player : characterEntity, eventResponder
     {
 		base.controlCharacterPhysics(delta);
 		handleCoyoteJump();
-        bicycle();
+    }
+
+    protected override void detectHorizontalDirection()
+    {
+		base.detectHorizontalDirection();
+		if ((disabledHorizontal == 'L' && horizontalMovement < 0) || (disabledHorizontal == 'R' && horizontalMovement > 0)) {
+            horizontalMovement = 0;
+		}
     }
 
     protected override void handleGravity(double delta)
     {
-		/*
+        /*
 			The player has a choice whilst falling to hold the
 			down button and increase their descent downwards.
 		*/
-		isWallSliding = (!justOnWall || isWallSliding || Velocity.Y > 0) && !IsOnFloor() && IsOnWall() && (Input.IsActionPressed("ui_right") || Input.IsActionPressed("ui_left"));
-		justOnWall = IsOnWall();
-		float gravity = entityBattleData.GravityVelocity.getFinalValue();
+        evaluateWallSliding();
+        float gravity = entityBattleData.GravityVelocity.getFinalValue();
         if (Input.IsActionPressed("ui_down"))
         {
-			gravity *= additionalGravityFactor;
+            gravity *= additionalGravityFactor;
         }
         if (isWallSliding)
         {
-			gravity *= wallSlidingGravityFactor;
+            gravity *= wallSlidingGravityFactor;
 			GD.Print("isWallSliding");
         }
-		applyGravity(delta, gravity);
+        applyGravity(delta, gravity);
     }
-	protected override void restoreJumps()
+
+    private void evaluateWallSliding()
+    {
+        isWallSliding = Velocity.Y > 0 && !IsOnFloor() && IsOnWall() && (Input.IsActionPressed("ui_right") || Input.IsActionPressed("ui_left") || Velocity.X != 0 || isWallSliding);
+    }
+
+    protected override void restoreJumps()
     {
 		// This override of restoreJumps() now also accounts
 		// for the coyoteJumpTimer for the restoration.
@@ -121,7 +141,7 @@ public partial class player : characterEntity, eventResponder
 		wasOnFloor = IsOnFloor();
 	}
 
-	protected override void applyJump()
+	protected override void handleJump()
     {
 		/*
 			This is the implementation for wall-jumps; When
@@ -132,10 +152,19 @@ public partial class player : characterEntity, eventResponder
 		*/
 		if (isWallSliding)
 		{
-			baseVelocity.X = GetWallNormal().X * entityBattleData.Speed.getFinalValue();
+			baseVelocity.X = GetWallNormal().X * entityBattleData.Speed.getFinalValue() * 2;
+			disabledHorizontalTimer.Start();
+			disabledHorizontal = GetWallNormal().X > 0 ? 'L' : 'R';
+			GD.Print(disabledHorizontal);
 			jumpCount++;
 		}
-		base.applyJump();
+		base.handleJump();
+    }
+
+    protected override void doATurn(Direction dir = 0)
+    {
+        base.doATurn(dir);
+		bicycle();
     }
 
     public override void processDamage(damageTicket damage) {
@@ -178,11 +207,8 @@ public partial class player : characterEntity, eventResponder
 			margins. More of this mechanic will be improved further
 			down the line.
 		*/
-		if (justFacedRight && horizontalMovement < 0 || !justFacedRight && horizontalMovement > 0) {
-			justFacedRight = !justFacedRight;
-			if (baseVelocity.Y > 0) {
-				baseVelocity.Y /= bicycleFactor;
-			}
+		if (baseVelocity.Y > 0) {
+			baseVelocity.Y /= bicycleFactor;
 		}
 	}
 

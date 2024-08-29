@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://b5nhsqt51tx61"]
+[gd_scene load_steps=11 format=3 uid="uid://b5nhsqt51tx61"]
 
 [ext_resource type="Script" path="res://prototyping/player.cs" id="1_gugc5"]
 [ext_resource type="Texture2D" uid="uid://75ya8fi2u8va" path="res://prototyping/prototype_spritesheet.png" id="2_r5n55"]
 [ext_resource type="Resource" uid="uid://ctuenhqaagw22" path="res://chars/defaultEntityBattleData.tres" id="2_yifut"]
+[ext_resource type="PackedScene" uid="uid://2pu271n1117m" path="res://chars/playerChars/walljumpEdgeRaycast.tscn" id="4_6wrdu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjtwd"]
 size = Vector2(6, 16)
@@ -92,3 +93,15 @@ shape = SubResource("RectangleShape2D_bjtwd")
 
 [node name="BlinkTimer" type="Timer" parent="."]
 wait_time = 0.05
+
+[node name="DisabledHorizontalTimer" type="Timer" parent="."]
+wait_time = 0.33
+one_shot = true
+
+[node name="TopWalljumpCheck" parent="." instance=ExtResource("4_6wrdu")]
+position = Vector2(0, -6)
+target_position = Vector2(3, 0)
+
+[node name="BottomWalljumpCheck" parent="." instance=ExtResource("4_6wrdu")]
+position = Vector2(0, 10)
+target_position = Vector2(3, 0)
