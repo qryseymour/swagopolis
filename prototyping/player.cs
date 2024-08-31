@@ -21,10 +21,12 @@ public partial class player : characterEntity, eventResponder
 
 
 	// Fundamental Variables
-    public List<String> invulnerDurationTimers = new List<String>();
-	public bool isWallSliding = false;
 	public bool justOnWall = false;
+	public bool isWallSliding = false;
+	protected bool wasOnFloor = false;
+	protected bool justLeftLedge = false;
 	public char disabledHorizontal = ' ';
+    public List<String> invulnerDurationTimers = new List<String>();
 
 
 
@@ -96,7 +98,7 @@ public partial class player : characterEntity, eventResponder
 			The player has a choice whilst falling to hold the
 			down button and increase their descent downwards.
 		*/
-        evaluateWallSliding();
+        isWallSliding = Velocity.Y > 0 && !IsOnFloor() && fullSideOnWall;
         float gravity = entityBattleData.GravityVelocity.getFinalValue();
         if (Input.IsActionPressed("ui_down"))
         {
@@ -105,14 +107,9 @@ public partial class player : characterEntity, eventResponder
         if (isWallSliding)
         {
             gravity *= wallSlidingGravityFactor;
-			GD.Print("isWallSliding");
+			//GD.Print("isWallSliding");
         }
         applyGravity(delta, gravity);
-    }
-
-    private void evaluateWallSliding()
-    {
-        isWallSliding = Velocity.Y > 0 && !IsOnFloor() && IsOnWall() && (Input.IsActionPressed("ui_right") || Input.IsActionPressed("ui_left") || Velocity.X != 0 || isWallSliding);
     }
 
     protected override void restoreJumps()
@@ -155,7 +152,7 @@ public partial class player : characterEntity, eventResponder
 			baseVelocity.X = GetWallNormal().X * entityBattleData.Speed.getFinalValue() * 2;
 			disabledHorizontalTimer.Start();
 			disabledHorizontal = GetWallNormal().X > 0 ? 'L' : 'R';
-			GD.Print(disabledHorizontal);
+			doATurn();
 			jumpCount++;
 		}
 		base.handleJump();

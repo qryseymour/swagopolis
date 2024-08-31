@@ -98,10 +98,10 @@ wait_time = 0.05
 wait_time = 0.33
 one_shot = true
 
-[node name="TopWalljumpCheck" parent="." instance=ExtResource("4_6wrdu")]
+[node name="TopWallCheck" parent="." instance=ExtResource("4_6wrdu")]
 position = Vector2(0, -6)
-target_position = Vector2(3, 0)
+target_position = Vector2(3.1, 0)
 
-[node name="BottomWalljumpCheck" parent="." instance=ExtResource("4_6wrdu")]
+[node name="BottomWallCheck" parent="." instance=ExtResource("4_6wrdu")]
 position = Vector2(0, 10)
-target_position = Vector2(3, 0)
+target_position = Vector2(3.1, 0)

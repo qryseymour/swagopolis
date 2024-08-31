@@ -29,22 +29,23 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 
     
 	// Fundamental Variables
-    public forceDictionary appliedExternalForces = new forceDictionary();
-	protected Vector2 baseVelocity;
-    private Vector2 additionalForces;
     public int horizontalMovement = 0;
 	protected int startedHoldingRight = 0;
-	protected bool isFacingRight = true;
 	public bool isJumping = false;
-	protected bool wasOnFloor = false;
-	protected bool justLeftLedge = false;
+    public bool fullSideOnWall = false;
+	protected bool isFacingRight = true;
 	public float jumpCount = 0;
+	protected Vector2 baseVelocity;
     public Vector2 startingPosition;
+    private Vector2 additionalForces;
+    public forceDictionary appliedExternalForces = new forceDictionary();
 
 
 
     // Node references
 	public AnimatedSprite2D animatedSprite2D = null;
+    public RayCast2D topWallcheck = null;
+    public RayCast2D bottomWallcheck = null;
 
     
 
@@ -55,6 +56,8 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         entityBattleData = (entityBattleData)entityBattleData.Duplicate(true);
         // Child node initations
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+        topWallcheck = GetNode<RayCast2D>("TopWallCheck");
+        bottomWallcheck = GetNode<RayCast2D>("BottomWallCheck");
         // Signal Event Connections (Likely to be deleted)
 
         // Other stuff
@@ -100,6 +103,11 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         if (horizontalMovement == 0)
         {
             applyFriction(delta, entityBattleData.Speed.getFinalValue(), entityBattleData.Friction.getFinalValue());
+        }
+
+        fullSideOnWall = (bottomWallcheck.IsColliding() && topWallcheck.IsColliding()) ? true : false;
+        if (fullSideOnWall) {
+            GD.Print("FullSideOnWall");
         }
     }
 
