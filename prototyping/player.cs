@@ -7,6 +7,7 @@ public partial class player : characterEntity, eventResponder
 	// Player variable shadowing
 	public player() {
 		canJumpMidair = true;
+		controller = 1;
 	}
 
 	// Important Attributes
@@ -98,12 +99,15 @@ public partial class player : characterEntity, eventResponder
 			The player has a choice whilst falling to hold the
 			down button and increase their descent downwards.
 		*/
-        isWallSliding = Velocity.Y > 0 && !IsOnFloor() && fullSideOnWall;
         float gravity = entityBattleData.GravityVelocity.getFinalValue();
         if (Input.IsActionPressed("ui_down"))
         {
             gravity *= additionalGravityFactor;
+			if (Velocity.Y < 0) {
+				baseVelocity.Y = 0;
+			}
         }
+        isWallSliding = Velocity.Y > 0 && !IsOnFloor() && fullSideOnWall;
         if (isWallSliding)
         {
             gravity *= wallSlidingGravityFactor;
@@ -131,7 +135,7 @@ public partial class player : characterEntity, eventResponder
 			the floor. I don't know why I'm making dumb comments
 			like these.
 		*/
-		justLeftLedge = wasOnFloor && !IsOnFloor() && baseVelocity.Y >= 0;
+		justLeftLedge = wasOnFloor && !IsOnFloor() && Velocity.Y >= 0;
 		if (justLeftLedge) {
 			coyoteJumpTimer.Start();
 		}
@@ -154,6 +158,7 @@ public partial class player : characterEntity, eventResponder
 			disabledHorizontal = GetWallNormal().X > 0 ? 'L' : 'R';
 			doATurn();
 			jumpCount++;
+			GD.Print("Wall Jumping with Velocity.Y:" + Velocity.Y);
 		}
 		base.handleJump();
     }

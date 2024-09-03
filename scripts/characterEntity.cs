@@ -29,12 +29,13 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 
     
 	// Fundamental Variables
-    public int horizontalMovement = 0;
-	protected int startedHoldingRight = 0;
 	public bool isJumping = false;
     public bool fullSideOnWall = false;
 	protected bool isFacingRight = true;
+    public short horizontalMovement = 0;
+	protected short heldHorizontalMovement = 0;
 	public float jumpCount = 0;
+    public ushort controller = 0;
 	protected Vector2 baseVelocity;
     public Vector2 startingPosition;
     private Vector2 additionalForces;
@@ -71,7 +72,9 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
 	public override void _PhysicsProcess(double delta)
     {
         baseVelocity = Velocity - additionalForces;
-        controlCharacterPhysics(delta);
+        if (controller != 0) {
+            controlCharacterPhysics(delta);
+        }
         updateAnimations();
         additionalForces = appliedExternalForces.extractAllForcesPerFrame() * (float)delta;
         baseVelocity += additionalForces;
@@ -104,11 +107,7 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         {
             applyFriction(delta, entityBattleData.Speed.getFinalValue(), entityBattleData.Friction.getFinalValue());
         }
-
         fullSideOnWall = (bottomWallcheck.IsColliding() && topWallcheck.IsColliding()) ? true : false;
-        if (fullSideOnWall) {
-            GD.Print("FullSideOnWall");
-        }
     }
 
     protected virtual void detectHorizontalDirection()
@@ -116,20 +115,20 @@ public partial class characterEntity : CharacterBody2D, eventResponder {
         // Get the input direction and handle the movement/deceleration.
         // As good practice, you should replace UI actions with custom gameplay actions.
         // This piece of code is responsible for null-cancelling movement.
-        if (startedHoldingRight >= 0 && Input.IsActionPressed("ui_right"))
+        if (heldHorizontalMovement >= 0 && Input.IsActionPressed("ui_right"))
         {
-            startedHoldingRight = 1;
-            horizontalMovement = Input.IsActionPressed("ui_left") ? -1 : 1;
+            heldHorizontalMovement = 1;
+            horizontalMovement = (short)(Input.IsActionPressed("ui_left") ? -1 : 1);
         }
-        else if (startedHoldingRight <= 0 && Input.IsActionPressed("ui_left"))
+        else if (heldHorizontalMovement <= 0 && Input.IsActionPressed("ui_left"))
         {
-            startedHoldingRight = -1;
-            horizontalMovement = Input.IsActionPressed("ui_right") ? 1 : -1;
+            heldHorizontalMovement = -1;
+            horizontalMovement = (short)(Input.IsActionPressed("ui_right") ? 1 : -1);
         }
         else
         {
             horizontalMovement = 0;
-            startedHoldingRight = 0;
+            heldHorizontalMovement = 0;
         }
     }
 
